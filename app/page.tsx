@@ -1,20 +1,23 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 // import Instructions from './Instructions/page'
 import ImagePlayer from './ImagePlayer/page'
 
 const HomePage = () => {
-  const [images, setImages] = useState<string[]>([]); // State for uploaded images
-  const [isPlaying, setIsPlaying] = useState(false); // State for slideshow play/stop
-
+  const [images, setImages] = useState<string[]>([]); 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  // need useRef to make sure that images are uploaded before midi notes attempt to access image array
+  const imagesRef = useRef<string[]>([]);
+  const [isPlaying, setIsPlaying] = useState(false); 
 
+  // toggle play/stop
   const toggleSlideshow = () => {
-    setIsPlaying((prev) => !prev); // Toggle the play/stop state
+    setIsPlaying((prev) => !prev); 
   };
 
+  // put images uploaded by user in images array
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []); // Convert FileList to an array
+    const files = Array.from(event.target.files || []); // convert FileList to an array
     // URL API is built in to the browser
     // it generates a temporary URL that represents the file's data as a Blob
     // the assigned URL can then be used to load the file into elements like nextjs Image
@@ -22,33 +25,56 @@ const HomePage = () => {
     setImages(imageURLs);
   };
 
-  // Initialize MIDI
+  // need useRef to make sure that images are uploaded before midi notes attempt to access image array
+  useEffect(() => {
+    imagesRef.current = images; // Sync ref with the latest images state
+  }, [images]);
+
+  // request access to receive MIDI from user
+  // and connect to port 
+  // using 01. Internal MIDI because that's what supercollider loopbemidi uses
   useEffect(() => {
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then((midiAccess) => {
+        // SHOULD PROBABLY POPULATE LIKE A DROP DOWN MENU FOR THE USER TO SELECT FROM THEIR AVAILABLE MIDI INPUTS...
+        console.log("Available MIDI Inputs:");
         for (const input of midiAccess.inputs.values()) {
-          input.onmidimessage = handleMIDIMessage;
+          console.log(`Name: ${input.name}, Manufacturer: ${input.manufacturer}`);
+        }
+  
+        // connect to the specified port
+        const targetInput = Array.from(midiAccess.inputs.values()).find(
+          (input) => input.name === "01. Internal MIDI" // port name from SuperCollider
+        );
+  
+        if (targetInput) {
+          targetInput.onmidimessage = handleMIDIMessage;
+          console.log(`Connected to: ${targetInput.name}`);
+        } else {
+          console.warn("Target MIDI port not found.");
         }
       });
     } else {
       console.warn("Web MIDI API not supported in this browser.");
     }
   }, []);
-
-  // Handle MIDI Message
-  // npm install --save-dev @types/webmidi
+  
   const handleMIDIMessage = (message: WebMidi.MIDIMessageEvent) => {
-    const [command, note] = message.data;
-
-    // Note On (command 144)
-    if (command === 144) {
-      const newIndex = note % images.length; // Map note to image index
+    const [command, note, velocity] = message.data;
+  
+    console.log(`Received MIDI message: Command=${command}, Note=${note}, Velocity=${velocity}`);
+  
+    if ((command & 0xf0) === 144 && velocity > 0) { // Note On
+      console.log(`Images length: ${imagesRef.current.length}`);
+      // console.log(`Images length: ${images.length}`);
+      // const newIndex = note % images.length;
+      const newIndex = note % imagesRef.current.length;
+      console.log(note);
+      console.log(newIndex);
       setCurrentImageIndex(newIndex);
     }
   };
 
-  console.log(currentImageIndex);
-  
   // Beats Per Minute
   const BPM: number = 80;
 
