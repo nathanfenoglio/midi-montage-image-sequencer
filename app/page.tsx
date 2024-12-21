@@ -6,15 +6,25 @@ import ImagePlayer from './ImagePlayer/page'
 const HomePage = () => {
   const [images, setImages] = useState<string[]>([]); 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   // need useRef to make sure that images are uploaded before midi notes attempt to access image array
   const imagesRef = useRef<string[]>([]);
   const [isPlaying, setIsPlaying] = useState(false); 
+  
   // transpose option shift all midi notes by specified amount
   const [transpose, setTranspose] = useState(0)
   const transposeRef = useRef<number>(0);
 
   // useRef to be able to control image display to be full screen or not
   const sliderRef = useRef<HTMLDivElement | null>(null); // Ref for the slider
+
+  // mod by option to mod any midi note to fit within # of images that user has uploaded
+  const [modByNumImages, setModByNumImages] = useState(true);
+  const modByNumImagesRef = useRef<boolean>(true);
+
+  const toggleModByNumImages = () => {
+    setModByNumImages((prev) => !prev); 
+  };
 
   // toggle play/stop
   const toggleSlideshow = () => {
@@ -39,6 +49,10 @@ const HomePage = () => {
   useEffect(() => {
     transposeRef.current = transpose;
   }, [transpose]);
+
+  useEffect(() => {
+    modByNumImagesRef.current = modByNumImages; 
+  }, [modByNumImages]);
 
   // request access to receive MIDI from user
   // and connect to port 
@@ -79,12 +93,21 @@ const HomePage = () => {
     // 10010000 is 144 and represents note on
     if ((command & 0xf0) === 144 && velocity > 0) { // Note On
       console.log(`Images length: ${imagesRef.current.length}`);
-      // SHOULD ADD OPTION TO MOD BY IMAGE LENGTH OR EVEN WHATEVER SPECIFIED MOD #...
-      const newIndex = (note + transposeRef.current) % imagesRef.current.length;
-      setCurrentImageIndex(newIndex);
+
+      // mod note by # of images or not based on user toggle button
+      if (modByNumImagesRef.current) {
+        const newIndex = (note + transposeRef.current) % imagesRef.current.length;
+        setCurrentImageIndex(newIndex);
+        console.log("newIndex: " + newIndex);
+      }
+      else {
+        const newIndex = (note + transposeRef.current);
+        setCurrentImageIndex(newIndex);
+        console.log("newIndex: " + newIndex);
+      }
+
 
       console.log(note);
-      console.log(newIndex);
       console.log("transposeRef.current: " + transposeRef.current);
     }
   };
@@ -140,6 +163,19 @@ const HomePage = () => {
         className="mb-6 p-2 border border-gray-300 rounded"
       />
 
+      {/* mod by # of images button */}
+      {images.length > 0 && (
+        <button
+          onClick={toggleModByNumImages}
+          className={`mb-4 px-4 py-2 rounded text-white ${
+            modByNumImages ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
+          }`}
+        >
+          {modByNumImages ? "No Mod By" : "Mod By # Images"}
+        </button>
+      )}
+
+
       {/* Start/Stop Button */}
       {images.length > 0 && (
         <button
@@ -171,11 +207,9 @@ const HomePage = () => {
 
       {/* Fullscreen Button */}
       <button
-        // onClick={toggleFullscreen}
         onClick={makeFullScreen}
         className="absolute right-4 bottom-4 p-2 bg-blue-500 text-white rounded"
       >
-        {/* {isFullscreen ? "Exit Fullscreen" : "Fullscreen"} */}
         Full Screen
       </button>
 
