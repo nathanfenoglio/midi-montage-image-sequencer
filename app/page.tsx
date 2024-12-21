@@ -9,6 +9,12 @@ const HomePage = () => {
   // need useRef to make sure that images are uploaded before midi notes attempt to access image array
   const imagesRef = useRef<string[]>([]);
   const [isPlaying, setIsPlaying] = useState(false); 
+  // transpose option shift all midi notes by specified amount
+  const [transpose, setTranspose] = useState(0)
+  const transposeRef = useRef<number>(0);
+
+  // useRef to be able to control image display to be full screen or not
+  const sliderRef = useRef<HTMLDivElement | null>(null); // Ref for the slider
 
   // toggle play/stop
   const toggleSlideshow = () => {
@@ -29,6 +35,10 @@ const HomePage = () => {
   useEffect(() => {
     imagesRef.current = images; // Sync ref with the latest images state
   }, [images]);
+
+  useEffect(() => {
+    transposeRef.current = transpose;
+  }, [transpose]);
 
   // request access to receive MIDI from user
   // and connect to port 
@@ -60,22 +70,31 @@ const HomePage = () => {
   }, []);
   
   const handleMIDIMessage = (message: WebMidi.MIDIMessageEvent) => {
+    // destructure midi note message
     const [command, note, velocity] = message.data;
   
     console.log(`Received MIDI message: Command=${command}, Note=${note}, Velocity=${velocity}`);
   
+    // 0xf0 11110000 to mask and get the upper 4 bits of the command part of the midi message to check if note on
+    // 10010000 is 144 and represents note on
     if ((command & 0xf0) === 144 && velocity > 0) { // Note On
       console.log(`Images length: ${imagesRef.current.length}`);
-      // console.log(`Images length: ${images.length}`);
-      // const newIndex = note % images.length;
-      const newIndex = note % imagesRef.current.length;
+      // SHOULD ADD OPTION TO MOD BY IMAGE LENGTH OR EVEN WHATEVER SPECIFIED MOD #...
+      const newIndex = (note + transposeRef.current) % imagesRef.current.length;
+      setCurrentImageIndex(newIndex);
+
       console.log(note);
       console.log(newIndex);
-      setCurrentImageIndex(newIndex);
+      console.log("transposeRef.current: " + transposeRef.current);
     }
   };
 
+  const makeFullScreen = () => {
+    sliderRef.current?.requestFullscreen();
+  };
+
   // Beats Per Minute
+  // will not be used when receiving midi data from user as the tempo will be controlled by whatever is received in real time
   const BPM: number = 80;
 
   // durations
@@ -109,6 +128,18 @@ const HomePage = () => {
         className="mb-6 p-2 border border-gray-300 rounded"
       />
 
+      {/* Transpose Input */}
+      <label htmlFor="transpose-input" className="text-white mb-2">
+        Transpose MIDI Notes:
+      </label>
+      <input
+        id="transpose-input"
+        type="number"
+        value={transpose}
+        onChange={(e) => setTranspose(Number(e.target.value))}
+        className="mb-6 p-2 border border-gray-300 rounded"
+      />
+
       {/* Start/Stop Button */}
       {images.length > 0 && (
         <button
@@ -122,11 +153,14 @@ const HomePage = () => {
       )}
 
       {/* Image Slider */}
-      <div className="w-full max-w-4xl">
+      <div ref={sliderRef} className="w-full max-w-4xl relative">
         {images.length > 0 ? (
           isPlaying ? (
-            // <ImagePlayer images={images} intervals={durations} />
-            <ImagePlayer images={images} intervals={durations} currentImageIndex={currentImageIndex}/>
+            <ImagePlayer
+              images={images}
+              intervals={durations}
+              currentImageIndex={currentImageIndex}
+            />
           ) : (
             <p className="text-gray-500">Click Start to begin the slideshow.</p>
           )
@@ -134,6 +168,17 @@ const HomePage = () => {
           <p className="text-gray-500">Please upload images to start the slider.</p>
         )}
       </div>
+
+      {/* Fullscreen Button */}
+      <button
+        // onClick={toggleFullscreen}
+        onClick={makeFullScreen}
+        className="absolute right-4 bottom-4 p-2 bg-blue-500 text-white rounded"
+      >
+        {/* {isFullscreen ? "Exit Fullscreen" : "Fullscreen"} */}
+        Full Screen
+      </button>
+
     </div>
   )
 }
