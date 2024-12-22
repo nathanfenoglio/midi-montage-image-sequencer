@@ -19,9 +19,15 @@ const HomePage = () => {
   const sliderRef = useRef<HTMLDivElement | null>(null); // Ref for the slider
 
   // mod by option to mod any midi note to fit within # of images that user has uploaded
+  // does not guarantee an image will be displayed if midi note received is outside of array of images
+  // when modByNumImages is toggled off 
   const [modByNumImages, setModByNumImages] = useState(true);
   const modByNumImagesRef = useRef<boolean>(true);
 
+  const [modByUserInput, setModByUserInput] = useState(128);
+  const modByUserInputRef = useRef<number>(null); 
+
+  // toggle mod by # images
   const toggleModByNumImages = () => {
     setModByNumImages((prev) => !prev); 
   };
@@ -41,9 +47,13 @@ const HomePage = () => {
     setImages(imageURLs);
   };
 
-  // need useRef to make sure that images are uploaded before midi notes attempt to access image array
+  const makeFullScreen = () => {
+    sliderRef.current?.requestFullscreen();
+  };
+
+  // need useRef to make sure that images and whatever other user specified info is uploaded before midi notes attempt to access image array
   useEffect(() => {
-    imagesRef.current = images; // Sync ref with the latest images state
+    imagesRef.current = images; 
   }, [images]);
 
   useEffect(() => {
@@ -53,6 +63,10 @@ const HomePage = () => {
   useEffect(() => {
     modByNumImagesRef.current = modByNumImages; 
   }, [modByNumImages]);
+
+  useEffect(() => {
+    modByUserInputRef.current = modByUserInput;
+  }, [modByUserInput]);
 
   // request access to receive MIDI from user
   // and connect to port 
@@ -100,26 +114,30 @@ const HomePage = () => {
         setCurrentImageIndex(newIndex);
         console.log("newIndex: " + newIndex);
       }
+      // option for user specified mod by #
+      else if (modByUserInputRef.current != null) {
+        // choosing to mod by THEN transpose
+        const newIndex = (note % modByUserInputRef.current) + transposeRef.current;
+        setCurrentImageIndex(newIndex);
+        console.log("newIndex: " + newIndex);
+      }
       else {
         const newIndex = (note + transposeRef.current);
         setCurrentImageIndex(newIndex);
         console.log("newIndex: " + newIndex);
       }
 
-
       console.log(note);
       console.log("transposeRef.current: " + transposeRef.current);
     }
   };
 
-  const makeFullScreen = () => {
-    sliderRef.current?.requestFullscreen();
-  };
-
   // Beats Per Minute
   // will not be used when receiving midi data from user as the tempo will be controlled by whatever is received in real time
+  // ***
   const BPM: number = 80;
 
+  // not needed for incoming midi notes but leaving because may use for option to specify note/duration pattern without incoming midi notes
   // durations
   const quarter: number = 1000 * (60/BPM);
   const quarter3plet: number = (2000 / 3) * (60/BPM);
@@ -137,6 +155,7 @@ const HomePage = () => {
     eighth3plet,
     eighth3plet,
   ];
+  // ***
   
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-900 p-4">
@@ -175,21 +194,48 @@ const HomePage = () => {
         </button>
       )}
 
+      <label htmlFor="modby-input" className="text-white mb-2">
+        Mod By:
+      </label>
+      <input
+        id="modby-input"
+        type="number"
+        value={modByNumImagesRef.current ? images.length : modByUserInput}
+        onChange={(e) => {
+          if (!modByNumImagesRef.current) {
+            setModByUserInput(Number(e.target.value));
+          }
+        }}
+        className="mb-6 p-2 border border-gray-300 rounded"
+      />
 
-      {/* Start/Stop Button */}
-      {images.length > 0 && (
-        <button
-          onClick={toggleSlideshow}
-          className={`mb-4 px-4 py-2 rounded text-white ${
-            isPlaying ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
-          }`}
-        >
-          {isPlaying ? "Stop" : "Start"}
-        </button>
-      )}
+      {/* start/stop button and fullscreen button on same line */}
+      <div className='flex gap-4'>
+        {/* Start/Stop Button */}
+        {images.length > 0 && (
+          <button
+            onClick={toggleSlideshow}
+            className={`px-4 py-2 rounded text-white ${
+              isPlaying ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`
+            }
+          >
+            {isPlaying ? "Stop" : "Start"}
+          </button>
+        )}
+
+        {/* Fullscreen Button */}
+        {images.length > 0 &&
+          <button
+            onClick={makeFullScreen}
+            className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer flex items-center justify-center"
+          >
+            Full Screen
+          </button>
+        }
+      </div>
 
       {/* Image Slider */}
-      <div ref={sliderRef} className="w-full max-w-4xl relative">
+      <div ref={sliderRef} className="w-full max-w-4xl mt-4">
         {images.length > 0 ? (
           isPlaying ? (
             <ImagePlayer
@@ -204,14 +250,6 @@ const HomePage = () => {
           <p className="text-gray-500">Please upload images to start the slider.</p>
         )}
       </div>
-
-      {/* Fullscreen Button */}
-      <button
-        onClick={makeFullScreen}
-        className="absolute right-4 bottom-4 p-2 bg-blue-500 text-white rounded"
-      >
-        Full Screen
-      </button>
 
     </div>
   )
