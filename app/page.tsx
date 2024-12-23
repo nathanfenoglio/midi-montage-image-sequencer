@@ -44,7 +44,14 @@ const HomePage = () => {
     // it generates a temporary URL that represents the file's data as a Blob
     // the assigned URL can then be used to load the file into elements like nextjs Image
     const imageURLs = files.map((file) => URL.createObjectURL(file)); // Create object URLs
-    setImages(imageURLs);
+    // setImages(imageURLs);
+    // needed to do it this way and just jump ahead and update imagesRef before useEffect would 
+    // so that imagesRef would be updated right away to display # of files uploaded correctly
+    setImages((prevImages) => {
+      const updatedImages = [...prevImages, ...imageURLs];
+      imagesRef.current = updatedImages; // Update the ref immediately
+      return updatedImages;
+    });
   };
 
   const makeFullScreen = () => {
@@ -75,6 +82,7 @@ const HomePage = () => {
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then((midiAccess) => {
         // SHOULD PROBABLY POPULATE LIKE A DROP DOWN MENU FOR THE USER TO SELECT FROM THEIR AVAILABLE MIDI INPUTS...
+        
         console.log("Available MIDI Inputs:");
         for (const input of midiAccess.inputs.values()) {
           console.log(`Name: ${input.name}, Manufacturer: ${input.manufacturer}`);
@@ -159,16 +167,29 @@ const HomePage = () => {
   
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-900 p-4">
-      <h1 className="text-2xl font-bold mb-4">Upload images to sequence</h1>
+      {/* see about moving image display to top eh it pushes everything else off of the screen */}
 
-      {/* File Upload Input */}
-      <input
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={handleFileUpload}
-        className="mb-6 p-2 border border-gray-300 rounded"
-      />
+      {/* <h1 className="text-2xl font-bold mb-4 text-white">Midi Montage Image Sequencer</h1> */}
+      {/* <h1 className="text-center w-[60%] mx-auto text-[#00FFFF]">Midi Montage Image Sequencer</h1> */}
+      <div className='mt-[2vh] mb-[6vh] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold'>
+        <h1 className='text-center w-[60%] mx-auto text-[#00FFFF]'>Midi Montage Image Sequencer</h1>
+      </div>
+
+      <div className='flex gap-4 items-center justify-center mb-4'>
+        {/* File Upload Input */}
+        <label className='inline-block px-6 py-3 bg-blue-500 text-white font-semibold text-center rounded cursor-pointer hover:bg-blue-600'>
+        Choose Files To Sequence
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileUpload}
+            // className="mb-6 p-2 border border-gray-300 rounded"
+            className="hidden"
+          />
+        </label>
+        <p className='text-white text-lg lg:text-2xl'>{imagesRef.current.length} files uploaded</p>
+      </div>
 
       {/* Transpose Input */}
       <label htmlFor="transpose-input" className="text-white mb-2">
