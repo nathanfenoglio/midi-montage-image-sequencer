@@ -10,6 +10,10 @@ const HomePage = () => {
   // need useRef to make sure that images are uploaded before midi notes attempt to access image array
   const imagesRef = useRef<string[]>([]);
   const [isPlaying, setIsPlaying] = useState(false); 
+
+  // user to be able to select from available midi inputs 
+  const [midiInputs, setMidiInputs] = useState<WebMidi.MIDIInput[]>([]);
+  const [selectedInputId, setSelectedInputId] = useState<string | null>(null);
   
   // transpose option shift all midi notes by specified amount
   const [transpose, setTranspose] = useState(0)
@@ -76,34 +80,59 @@ const HomePage = () => {
   }, [modByUserInput]);
 
   // request access to receive MIDI from user
-  // and connect to port 
-  // using 01. Internal MIDI because that's what supercollider loopbemidi uses
+  // and save available midi inputs in array to display for user to select 
   useEffect(() => {
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then((midiAccess) => {
-        // SHOULD PROBABLY POPULATE LIKE A DROP DOWN MENU FOR THE USER TO SELECT FROM THEIR AVAILABLE MIDI INPUTS...
-        
-        console.log("Available MIDI Inputs:");
-        for (const input of midiAccess.inputs.values()) {
-          console.log(`Name: ${input.name}, Manufacturer: ${input.manufacturer}`);
-        }
-  
-        // connect to the specified port
-        const targetInput = Array.from(midiAccess.inputs.values()).find(
-          (input) => input.name === "01. Internal MIDI" // port name from SuperCollider
-        );
-  
-        if (targetInput) {
-          targetInput.onmidimessage = handleMIDIMessage;
-          console.log(`Connected to: ${targetInput.name}`);
-        } else {
-          console.warn("Target MIDI port not found.");
-        }
+        // save all available midi inputs in array to display in drop down menu for user to select
+        const inputs = Array.from(midiAccess.inputs.values());
+        setMidiInputs(inputs);
+
+        // if new available midi input is detected, update midi inputs array
+        midiAccess.onstatechange = () => {
+          setMidiInputs(Array.from(midiAccess.inputs.values()));
+        };
+
+        // just printing all of the available attributes of a MIDIInput object
+        midiAccess.inputs.forEach((input) => {
+          console.log(`ID: ${input.id}`);
+          console.log(`Name: ${input.name}`);
+          console.log(`Manufacturer: ${input.manufacturer}`);
+          console.log(`Type: ${input.type}`);
+          console.log(`Version: ${input.version}`);
+          console.log(`State: ${input.state}`);
+          console.log(`Connection: ${input.connection}`);
+        });
       });
     } else {
       console.warn("Web MIDI API not supported in this browser.");
     }
   }, []);
+
+  // midi input selection change handler
+  const handleMidiInputChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const inputId = event.target.value;
+
+    // clear the listener for the previously selected input if input was previously selected
+    if (selectedInputId) {
+      const previousInput = midiInputs.find((input) => input.id === selectedInputId);
+      if (previousInput) {
+        previousInput.onmidimessage = null; // remove previous listener by selecting null instead of your event handler handleMIDIMessage 
+        console.log(`Disconnected from: ${previousInput.name}`);
+      }
+    }
+
+    setSelectedInputId(inputId);
+
+    // listen and handle midi messages from user specified input
+    // for you selectedInput that you use for supercollider out is 01. Internal MIDI
+    const selectedInput = midiInputs.find((input) => input.id === inputId);
+    if (selectedInput) {
+      // WEB MIDI API onmidimessage allows you to assign an event handler function to be used for incoming midi messages 
+      selectedInput.onmidimessage = handleMIDIMessage;
+      console.log(`Connected to: ${selectedInput.name}`);
+    }
+  };
   
   const handleMIDIMessage = (message: WebMidi.MIDIMessageEvent) => {
     // destructure midi note message
@@ -169,10 +198,25 @@ const HomePage = () => {
     <div className="flex flex-col items-center min-h-screen bg-gray-900 p-4">
       {/* see about moving image display to top eh it pushes everything else off of the screen */}
 
-      {/* <h1 className="text-2xl font-bold mb-4 text-white">Midi Montage Image Sequencer</h1> */}
-      {/* <h1 className="text-center w-[60%] mx-auto text-[#00FFFF]">Midi Montage Image Sequencer</h1> */}
       <div className='mt-[2vh] mb-[6vh] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold'>
         <h1 className='text-center w-[60%] mx-auto text-[#00FFFF]'>Midi Montage Image Sequencer</h1>
+      </div>
+
+      {/* MIDI Input Selection drop down menu */}
+      <div className="mb-4">
+        <label className="text-white mr-2 text-lg lg:text-2xl">Select MIDI Input Port:</label>
+        <select
+          onChange={handleMidiInputChange}
+          value={selectedInputId || ''}
+          className="p-2 border border-gray-300 rounded"
+        >
+          <option value="">-- Select Input --</option>
+          {midiInputs.map((input) => (
+            <option key={input.id} value={input.id}>
+              {input.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className='flex gap-4 items-center justify-center mb-4'>
