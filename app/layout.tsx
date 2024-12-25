@@ -29,6 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* {children} */}
+        {/* wrap all children components in ImagesProvider context */}
         <ImagesProvider>{children}</ImagesProvider>
       </body>
     </html>

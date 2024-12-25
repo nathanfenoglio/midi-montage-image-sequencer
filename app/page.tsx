@@ -53,10 +53,10 @@ const HomePage = () => {
     const imageURLs = files.map((file) => URL.createObjectURL(file)); // Create object URLs
     // setImages(imageURLs);
     // needed to do it this way and just jump ahead and update imagesRef before useEffect would 
-    // so that imagesRef would be updated right away to display # of files uploaded correctly
+    // so that imagesRef would be updated right away to display # of files uploaded correctly 
     setImages((prevImages) => {
       const updatedImages = [...prevImages, ...imageURLs];
-      imagesRef.current = updatedImages; // Update the ref immediately
+      imagesRef.current = updatedImages; // update the ref immediately instead of waiting for useEffect
       return updatedImages;
     });
   };
@@ -68,8 +68,6 @@ const HomePage = () => {
   // need useRef to make sure that images and whatever other user specified info is uploaded before midi notes attempt to access image array
   useEffect(() => {
     imagesRef.current = images; 
-    // trying to share images with reorder page...
-    // localStorage.setItem('images', JSON.stringify(images));
   }, [images]);
 
   useEffect(() => {
@@ -114,64 +112,6 @@ const HomePage = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   const initializeMidi = async () => {
-  //     try {
-  //       const access = await navigator.requestMIDIAccess();
-  //       const inputs = Array.from(access.inputs.values()); // Get the actual MIDIInput objects
-  //       setMidiInputs(inputs); // Set the state with the correct type
-  //       console.log(inputs);
-  
-  //       // Update inputs when state changes
-  //       access.onstatechange = () => {
-  //         const updatedInputs = Array.from(access.inputs.values());
-  //         setMidiInputs(updatedInputs);
-  //         console.log('MIDI Inputs updated:', updatedInputs);
-  //       };
-  //     } catch (err) {
-  //       console.error('Failed to access MIDI inputs:', err);
-  //     }
-  //   };
-  
-  //   console.log('hello???');
-  //   initializeMidi();
-  // }, []);
-
-  // useEffect(() => {
-  //   let midiAccess: any;
-  
-  //   const initializeMidi = async () => {
-  //     try {
-  //       midiAccess = await navigator.requestMIDIAccess();
-  //       const inputs: any = Array.from(midiAccess.inputs.values());
-  //       setMidiInputs(inputs);
-  
-  //       midiAccess.onstatechange = (event: any) => {
-  //         const updatedInputs: any = Array.from(event.target.inputs.values());
-  //         setMidiInputs(updatedInputs);
-  //       };
-  //     } catch (err) {
-  //       console.error("Failed to access MIDI inputs:", err);
-  //     }
-  //   };
-  
-  //   initializeMidi();
-  
-  //   // Cleanup to avoid dangling listeners
-  //   return () => {
-  //     if (midiAccess) midiAccess.onstatechange = null;
-  //   };
-  // }, []);
-  
-  // Log `midiInputs` when the state updates
-  // useEffect(() => {
-  //   if (midiInputs.length > 0) {
-  //     console.log('Available MIDI inputs:', midiInputs);
-  //   } else {
-  //     console.log('No MIDI inputs found.');
-  //   }
-  // }, [midiInputs]);
-
   // midi input selection change handler
   const handleMidiInputChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const inputId = event.target.value;
@@ -185,12 +125,12 @@ const HomePage = () => {
       }
     }
 
+    // set input id to new input id selected by user
     setSelectedInputId(inputId);
 
     // listen and handle midi messages from user specified input
     // for you selectedInput that you use for supercollider out is 01. Internal MIDI
     const selectedInput = midiInputs.find((input) => input.id === inputId);
-    // ALL OF A SUDDEN NOT ABLE TO SEE MIDI INPUT PORTS AFTER USING CONTEXT TO BE ABLE TO ACCESS THE IMAGE ARRAY
     if (selectedInput) {
       // WEB MIDI API onmidimessage allows you to assign an event handler function to be used for incoming midi messages 
       selectedInput.onmidimessage = handleMIDIMessage;
@@ -249,23 +189,7 @@ const HomePage = () => {
       console.log("transposeRef.current: " + transposeRef.current);
     }
   };
-
-  // just checking if midi permissions have been granted in the browser
-  // useEffect(() => {
-  //   if (!navigator.requestMIDIAccess) {
-  //     console.error('Web MIDI API is not supported in this browser.');
-  //     return;
-  //   }
-  
-  //   const checkPermissions = async () => {
-  //     try {
-  //       const access = await navigator.requestMIDIAccess();
-  //       console.log('MIDI access granted:', access);
-  //     } catch (err) {
-  //       console.error('Failed to get MIDI access:', err);
-  //     }
-  //   };
-  
+ 
   //   checkPermissions();
   // }, []);
 
@@ -347,12 +271,6 @@ const HomePage = () => {
           id="modby-input"
           type="number"
           value={modByNumImagesRef.current ? images.length : modByUserInput}
-          // value={modByNumImagesRef.current ? images.length : modByUserInputRef.current ?? 0}
-          // onChange={(e) => {
-          //   if (!modByNumImagesRef.current) {
-          //     setModByUserInput(Number(e.target.value));
-          //   }
-          // }}
           onChange={(e) => {
             if (!modByNumImagesRef.current) {
               const newValue = Number(e.target.value);
@@ -369,14 +287,6 @@ const HomePage = () => {
             <input
               type="checkbox"
               checked={modByNumImages}
-              // onChange={toggleModByNumImages}
-              // onChange={() => {
-              //   toggleModByNumImages();
-              //   if (modByNumImages) {
-              //     // Switching to mod by user input
-              //     setModByUserInput(images.length);
-              //   }
-              // }}
               onChange={() => {
                 toggleModByNumImages();
                 if (!modByNumImages) {

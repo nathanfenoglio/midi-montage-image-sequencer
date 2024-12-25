@@ -1,6 +1,5 @@
 "use client";
-// import { useState, useEffect, useRef } from "react";
-import Image from "next/image"; // Use Next.js Image for better performance
+import Image from "next/image"; 
 
 type ImagePlayerProps = {
   images: string[];
