@@ -29,6 +29,8 @@ const ImagePlayer = ({ images, intervals, currentImageIndex }: ImagePlayerProps)
 
   if (images.length === 0) return <p className="text-gray-600">No images uploaded yet.</p>;
 
+  console.log("currentImageIndex: " + currentImageIndex);
+
   return (
     <div className="w-full h-screen flex items-center justify-center bg-gray-900">
       <div className="w-[30%] h-[30%] pb-16 flex items-center ">

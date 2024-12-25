@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ImagesProvider } from './context/ImagesContext';
+import { GlobalProvider } from "./context/GlobalContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +29,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* {children} */}
-        {/* wrap all children components in ImagesProvider context */}
-        <ImagesProvider>{children}</ImagesProvider>
+        {/* wrap all children components in GlobalProvider global context provider */}
+        {/* to be able to have values persist when navigating to different pages */}
+        <GlobalProvider>{children}</GlobalProvider>
       </body>
     </html>
   );

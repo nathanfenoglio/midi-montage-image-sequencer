@@ -1,9 +1,10 @@
 'use client';
-import { useImages } from '../context/ImagesContext'; // useImages global context
+import { useGlobalContext } from '../context/GlobalContext';
+
 
 const reorder = () => {
-  // get images from ImagesContext that uses useContext React hook
-  const { images, setImages } = useImages();
+  // get images and setImages using global context 
+  const { images, setImages } = useGlobalContext();
   
   // to be implemented still...
   const handleReorder = (newOrder: string[]) => {
