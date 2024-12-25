@@ -2,9 +2,12 @@
 import React, { useEffect, useState, useRef } from 'react'
 // import Instructions from './Instructions/page'
 import ImagePlayer from './ImagePlayer/page'
+import Link from 'next/link';
+import { useImages } from './context/ImagesContext';
 
 const HomePage = () => {
-  const [images, setImages] = useState<string[]>([]); 
+  // const [images, setImages] = useState<string[]>([]); 
+  const { images, setImages } = useImages(); // Use context for shared images
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // need useRef to make sure that images are uploaded before midi notes attempt to access image array
@@ -65,6 +68,8 @@ const HomePage = () => {
   // need useRef to make sure that images and whatever other user specified info is uploaded before midi notes attempt to access image array
   useEffect(() => {
     imagesRef.current = images; 
+    // trying to share images with reorder page...
+    // localStorage.setItem('images', JSON.stringify(images));
   }, [images]);
 
   useEffect(() => {
@@ -109,6 +114,64 @@ const HomePage = () => {
     }
   }, []);
 
+  // useEffect(() => {
+  //   const initializeMidi = async () => {
+  //     try {
+  //       const access = await navigator.requestMIDIAccess();
+  //       const inputs = Array.from(access.inputs.values()); // Get the actual MIDIInput objects
+  //       setMidiInputs(inputs); // Set the state with the correct type
+  //       console.log(inputs);
+  
+  //       // Update inputs when state changes
+  //       access.onstatechange = () => {
+  //         const updatedInputs = Array.from(access.inputs.values());
+  //         setMidiInputs(updatedInputs);
+  //         console.log('MIDI Inputs updated:', updatedInputs);
+  //       };
+  //     } catch (err) {
+  //       console.error('Failed to access MIDI inputs:', err);
+  //     }
+  //   };
+  
+  //   console.log('hello???');
+  //   initializeMidi();
+  // }, []);
+
+  // useEffect(() => {
+  //   let midiAccess: any;
+  
+  //   const initializeMidi = async () => {
+  //     try {
+  //       midiAccess = await navigator.requestMIDIAccess();
+  //       const inputs: any = Array.from(midiAccess.inputs.values());
+  //       setMidiInputs(inputs);
+  
+  //       midiAccess.onstatechange = (event: any) => {
+  //         const updatedInputs: any = Array.from(event.target.inputs.values());
+  //         setMidiInputs(updatedInputs);
+  //       };
+  //     } catch (err) {
+  //       console.error("Failed to access MIDI inputs:", err);
+  //     }
+  //   };
+  
+  //   initializeMidi();
+  
+  //   // Cleanup to avoid dangling listeners
+  //   return () => {
+  //     if (midiAccess) midiAccess.onstatechange = null;
+  //   };
+  // }, []);
+  
+  // Log `midiInputs` when the state updates
+  // useEffect(() => {
+  //   if (midiInputs.length > 0) {
+  //     console.log('Available MIDI inputs:', midiInputs);
+  //   } else {
+  //     console.log('No MIDI inputs found.');
+  //   }
+  // }, [midiInputs]);
+
   // midi input selection change handler
   const handleMidiInputChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const inputId = event.target.value;
@@ -127,11 +190,25 @@ const HomePage = () => {
     // listen and handle midi messages from user specified input
     // for you selectedInput that you use for supercollider out is 01. Internal MIDI
     const selectedInput = midiInputs.find((input) => input.id === inputId);
+    // ALL OF A SUDDEN NOT ABLE TO SEE MIDI INPUT PORTS AFTER USING CONTEXT TO BE ABLE TO ACCESS THE IMAGE ARRAY
     if (selectedInput) {
       // WEB MIDI API onmidimessage allows you to assign an event handler function to be used for incoming midi messages 
       selectedInput.onmidimessage = handleMIDIMessage;
       console.log(`Connected to: ${selectedInput.name}`);
-    }
+    }    
+
+    // just printing all of the available attributes of a MIDIInput object
+    // it's always one behind the actual state but just printing so leaving alone 
+    midiInputs.forEach((input) => {
+      console.log(`ID: ${input.id}`);
+      console.log(`Name: ${input.name}`);
+      console.log(`Manufacturer: ${input.manufacturer}`);
+      console.log(`Type: ${input.type}`);
+      console.log(`Version: ${input.version}`);
+      console.log(`State: ${input.state}`);
+      console.log(`Connection: ${input.connection}`);
+    });
+    
   };
   
   const handleMIDIMessage = (message: WebMidi.MIDIMessageEvent) => {
@@ -154,7 +231,11 @@ const HomePage = () => {
       // option for user specified mod by #
       else if (modByUserInputRef.current != null) {
         // choosing to mod by THEN transpose
-        const newIndex = (note % modByUserInputRef.current) + transposeRef.current;
+        console.log("note: " + note);
+        console.log("modByNumImagesRef.current: " + modByNumImagesRef.current);
+        console.log("transposeRef.current: " + transposeRef.current);
+        // const newIndex = (note % modByUserInputRef.current) + transposeRef.current;
+        const newIndex = ((note % modByUserInputRef.current) + transposeRef.current) % imagesRef.current.length;
         setCurrentImageIndex(newIndex);
         console.log("newIndex: " + newIndex);
       }
@@ -168,6 +249,25 @@ const HomePage = () => {
       console.log("transposeRef.current: " + transposeRef.current);
     }
   };
+
+  // just checking if midi permissions have been granted in the browser
+  // useEffect(() => {
+  //   if (!navigator.requestMIDIAccess) {
+  //     console.error('Web MIDI API is not supported in this browser.');
+  //     return;
+  //   }
+  
+  //   const checkPermissions = async () => {
+  //     try {
+  //       const access = await navigator.requestMIDIAccess();
+  //       console.log('MIDI access granted:', access);
+  //     } catch (err) {
+  //       console.error('Failed to get MIDI access:', err);
+  //     }
+  //   };
+  
+  //   checkPermissions();
+  // }, []);
 
   // Beats Per Minute
   // will not be used when receiving midi data from user as the tempo will be controlled by whatever is received in real time
@@ -195,6 +295,7 @@ const HomePage = () => {
   // ***
   
   return (
+    // items-start will move all children elements to the left
     <div className="flex flex-col items-center min-h-screen bg-gray-900 p-4">
       {/* see about moving image display to top eh it pushes everything else off of the screen */}
 
@@ -203,7 +304,7 @@ const HomePage = () => {
       </div>
 
       {/* MIDI Input Selection drop down menu */}
-      <div className="mb-4">
+      <div className="mb-4 w-[95%] lg:w-[40%] items-start">
         <label className="text-white mr-2 text-lg lg:text-2xl">Select MIDI Input Port:</label>
         <select
           onChange={handleMidiInputChange}
@@ -219,7 +320,8 @@ const HomePage = () => {
         </select>
       </div>
 
-      <div className='flex gap-4 items-center justify-center mb-4'>
+      {/* <div className='flex gap-4 items-center justify-center mb-4'> */}
+      <div className='flex gap-4 w-[95%] lg:w-[40%] items-start mb-4'>
         {/* File Upload Input */}
         <label className='inline-block px-6 py-3 bg-blue-500 text-white font-semibold text-center rounded cursor-pointer hover:bg-blue-600'>
         Choose Files To Sequence
@@ -235,44 +337,78 @@ const HomePage = () => {
         <p className='text-white text-lg lg:text-2xl'>{imagesRef.current.length} files uploaded</p>
       </div>
 
-      {/* Transpose Input */}
-      <label htmlFor="transpose-input" className="text-white mb-2">
-        Transpose MIDI Notes:
-      </label>
-      <input
-        id="transpose-input"
-        type="number"
-        value={transpose}
-        onChange={(e) => setTranspose(Number(e.target.value))}
-        className="mb-6 p-2 border border-gray-300 rounded"
-      />
+      {/* modby # user input and toggle modby num images on same line */}
+      {/* <div className='flex items-center justify-center gap-4 mb-4'> */}
+      <div className='flex w-[95%] lg:w-[40%] items-start gap-4 mb-4 items-center'>
+        <label htmlFor="modby-input" className="text-white text-lg lg:text-2xl">
+          Mod By:
+        </label>
+        <input
+          id="modby-input"
+          type="number"
+          value={modByNumImagesRef.current ? images.length : modByUserInput}
+          // value={modByNumImagesRef.current ? images.length : modByUserInputRef.current ?? 0}
+          // onChange={(e) => {
+          //   if (!modByNumImagesRef.current) {
+          //     setModByUserInput(Number(e.target.value));
+          //   }
+          // }}
+          onChange={(e) => {
+            if (!modByNumImagesRef.current) {
+              const newValue = Number(e.target.value);
+              setModByUserInput(newValue);
+              modByUserInputRef.current = newValue;
+            }
+          }}
+          className="p-2 border border-gray-300 rounded"
+        />
 
-      {/* mod by # of images button */}
-      {images.length > 0 && (
-        <button
-          onClick={toggleModByNumImages}
-          className={`mb-4 px-4 py-2 rounded text-white ${
-            modByNumImages ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
-          }`}
-        >
-          {modByNumImages ? "No Mod By" : "Mod By # Images"}
-        </button>
-      )}
+        {/* mod by # of images checkbox */}
+        {images.length > 0 && (
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={modByNumImages}
+              // onChange={toggleModByNumImages}
+              // onChange={() => {
+              //   toggleModByNumImages();
+              //   if (modByNumImages) {
+              //     // Switching to mod by user input
+              //     setModByUserInput(images.length);
+              //   }
+              // }}
+              onChange={() => {
+                toggleModByNumImages();
+                if (!modByNumImages) {
+                  // Switching to mod by # images
+                  const newValue = images.length;
+                  setModByUserInput(newValue); // Update the displayed value
+                  modByUserInputRef.current = newValue; // Update the reference value
+                }
+              }}
+              className="w-10 h-10 lg:w-7 lg:h-7 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <span className="text-white text-lg lg:text-2xl">Mod By # Images</span>
+          </label>
+        )}
 
-      <label htmlFor="modby-input" className="text-white mb-2">
-        Mod By:
-      </label>
-      <input
-        id="modby-input"
-        type="number"
-        value={modByNumImagesRef.current ? images.length : modByUserInput}
-        onChange={(e) => {
-          if (!modByNumImagesRef.current) {
-            setModByUserInput(Number(e.target.value));
-          }
-        }}
-        className="mb-6 p-2 border border-gray-300 rounded"
-      />
+      </div>
+
+      {/* transpose midi notes label and input */}
+      {/* <div className='flex items-center justify-center gap-4 mb-4'> */}
+      <div className='flex w-[95%] lg:w-[40%] items-start gap-4 mb-4'>
+        {/* Transpose Input */}
+        <label htmlFor="transpose-input" className="text-white text-lg lg:text-2xl">
+          Transpose MIDI Notes:
+        </label>
+        <input
+          id="transpose-input"
+          type="number"
+          value={transpose}
+          onChange={(e) => setTranspose(Number(e.target.value))}
+          className="p-2 border border-gray-300 rounded"
+        />
+      </div>
 
       {/* start/stop button and fullscreen button on same line */}
       <div className='flex gap-4'>
@@ -297,6 +433,14 @@ const HomePage = () => {
             Full Screen
           </button>
         }
+      </div>
+
+      <div className='p-4'>
+        <Link href="/reorder">
+          <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Reorder Images
+          </button>
+        </Link>
       </div>
 
       {/* Image Slider */}
