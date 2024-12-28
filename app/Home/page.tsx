@@ -7,6 +7,10 @@ import Link from 'next/link';
 import { useGlobalContext } from '../context/GlobalContext'; 
 
 const HomePage = () => {
+  interface ImageItem {
+    id: string;
+    url: string;
+  }
   // get all global values into their respective variables
   const {
     images,
@@ -27,7 +31,8 @@ const HomePage = () => {
   const currentImageIndexRef = useRef<number>(0);
 
   // need useRef to make sure that images are uploaded before midi notes attempt to access image array
-  const imagesRef = useRef<string[]>([]);
+  // const imagesRef = useRef<string[]>([]);
+  const imagesRef = useRef<ImageItem[]>([]);
   const [isPlaying, setIsPlaying] = useState(false); 
 
   // user to be able to select from available midi inputs 
@@ -62,18 +67,37 @@ const HomePage = () => {
   };
 
   // put images uploaded by user in images array
+  // const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = Array.from(event.target.files || []); // convert FileList to an array
+  //   // URL API is built in to the browser
+  //   // it generates a temporary URL that represents the file's data as a Blob
+  //   // the assigned URL can then be used to load the file into elements like nextjs Image
+  //   const imageURLs = files.map((file) => URL.createObjectURL(file)); // Create object URLs
+  //   // setImages(imageURLs);
+  //   // needed to do it this way and just jump ahead and update imagesRef before useEffect would 
+  //   // so that imagesRef would be updated right away to display # of files uploaded correctly 
+  //   setImages((prevImages) => {
+  //     const updatedImages = [...prevImages, ...imageURLs];
+  //     imagesRef.current = updatedImages; // update the ref immediately instead of waiting for useEffect
+  //     console.log(updatedImages);
+  //     return updatedImages;
+  //   });
+  // };
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []); // convert FileList to an array
-    // URL API is built in to the browser
-    // it generates a temporary URL that represents the file's data as a Blob
-    // the assigned URL can then be used to load the file into elements like nextjs Image
-    const imageURLs = files.map((file) => URL.createObjectURL(file)); // Create object URLs
-    // setImages(imageURLs);
-    // needed to do it this way and just jump ahead and update imagesRef before useEffect would 
-    // so that imagesRef would be updated right away to display # of files uploaded correctly 
+    const files = Array.from(event.target.files || []); // Convert FileList to an array
+  
+    // Map files to objects with unique IDs and blob URLs
+    const newImages = files.map((file) => ({
+      id: `image-${Date.now()}-${Math.random()}`, // Generate unique ID
+      url: URL.createObjectURL(file), // Generate blob URL
+    }));
+  
+    // Update state and ref
     setImages((prevImages) => {
-      const updatedImages = [...prevImages, ...imageURLs];
-      imagesRef.current = updatedImages; // update the ref immediately instead of waiting for useEffect
+      const updatedImages = [...prevImages, ...newImages];
+      imagesRef.current = updatedImages; // Update the ref immediately
+      console.log(updatedImages);
       return updatedImages;
     });
   };

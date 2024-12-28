@@ -1,8 +1,14 @@
 "use client";
 import Image from "next/image"; 
 
+interface ImageItem {
+  id: string;
+  url: string;
+}
+
 type ImagePlayerProps = {
-  images: string[];
+  // images: string[];
+  images: ImageItem[];
   intervals: number[];
   currentImageIndex: number;
 }
@@ -35,7 +41,8 @@ const ImagePlayer = ({ images, intervals, currentImageIndex }: ImagePlayerProps)
     <div className="w-full h-screen flex items-center justify-center bg-gray-900">
       <div className="w-[30%] h-[30%] pb-16 flex items-center ">
         <Image
-          src={images[currentImageIndex]}
+          // src={images[currentImageIndex]}
+          src={images[currentImageIndex].url}
           alt={`Slide ${currentImageIndex}`}
           width={600} 
           height={600} 
