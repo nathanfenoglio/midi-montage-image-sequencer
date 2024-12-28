@@ -61,10 +61,12 @@ const HomePage = () => {
   // put images uploaded by user in images array
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []); // Convert FileList to an array
-  
+    
+    let counter: number = 1;
     // Map files to objects with unique IDs and blob URLs
     const newImages = files.map((file) => ({
-      id: `image-${Date.now()}-${Math.random()}`, // Generate unique ID
+      // id: `image-${Date.now()}-${Math.random()}`, // Generate unique ID
+      id: `image-${Date.now()}-${Math.random()}-${counter++}`, // Generate unique ID
       // URL API is built in to the browser
       // it generates a temporary URL that represents the file's data as a Blob
       // the assigned URL can then be used to load the file into elements like nextjs Image
