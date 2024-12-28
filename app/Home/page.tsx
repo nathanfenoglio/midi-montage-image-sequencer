@@ -25,22 +25,17 @@ const HomePage = () => {
     setTranspose,
   } = useGlobalContext();
 
-  // const [images, setImages] = useState<string[]>([]); 
-  // const { images, setImages } = useImages(); // Use context for shared images
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // doesn't need to persist globally like many of the other variables
   const currentImageIndexRef = useRef<number>(0);
 
   // need useRef to make sure that images are uploaded before midi notes attempt to access image array
-  // const imagesRef = useRef<string[]>([]);
   const imagesRef = useRef<ImageItem[]>([]);
   const [isPlaying, setIsPlaying] = useState(false); 
 
   // user to be able to select from available midi inputs 
   const [midiInputs, setMidiInputs] = useState<WebMidi.MIDIInput[]>([]);
-  // const [selectedInputId, setSelectedInputId] = useState<string | null>(null);
   
   // transpose option shift all midi notes by specified amount
-  // const [transpose, setTranspose] = useState(0)
   const transposeRef = useRef<number>(0);
 
   // useRef to be able to control image display to be full screen or not
@@ -49,10 +44,7 @@ const HomePage = () => {
   // mod by option to mod any midi note to fit within # of images that user has uploaded
   // when modByNumImages is toggled off 
   // will mod by # of images after mod by THEN transpose operation is performed to avoid any possibility of index out of images array range 
-  // const [modByNumImages, setModByNumImages] = useState(true);
   const modByNumImagesRef = useRef<boolean>(true);
-
-  // const [modByUserInput, setModByUserInput] = useState(128);
   const modByUserInputRef = useRef<number>(null); 
 
   // toggle mod by # images
@@ -67,37 +59,24 @@ const HomePage = () => {
   };
 
   // put images uploaded by user in images array
-  // const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = Array.from(event.target.files || []); // convert FileList to an array
-  //   // URL API is built in to the browser
-  //   // it generates a temporary URL that represents the file's data as a Blob
-  //   // the assigned URL can then be used to load the file into elements like nextjs Image
-  //   const imageURLs = files.map((file) => URL.createObjectURL(file)); // Create object URLs
-  //   // setImages(imageURLs);
-  //   // needed to do it this way and just jump ahead and update imagesRef before useEffect would 
-  //   // so that imagesRef would be updated right away to display # of files uploaded correctly 
-  //   setImages((prevImages) => {
-  //     const updatedImages = [...prevImages, ...imageURLs];
-  //     imagesRef.current = updatedImages; // update the ref immediately instead of waiting for useEffect
-  //     console.log(updatedImages);
-  //     return updatedImages;
-  //   });
-  // };
-
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []); // Convert FileList to an array
   
     // Map files to objects with unique IDs and blob URLs
     const newImages = files.map((file) => ({
       id: `image-${Date.now()}-${Math.random()}`, // Generate unique ID
+      // URL API is built in to the browser
+      // it generates a temporary URL that represents the file's data as a Blob
+      // the assigned URL can then be used to load the file into elements like nextjs Image
       url: URL.createObjectURL(file), // Generate blob URL
     }));
   
     // Update state and ref
+    // needed to do it this way and just jump ahead and update imagesRef before useEffect would 
+    // so that imagesRef would be updated right away to display # of files uploaded correctly 
     setImages((prevImages) => {
       const updatedImages = [...prevImages, ...newImages];
       imagesRef.current = updatedImages; // Update the ref immediately
-      console.log(updatedImages);
       return updatedImages;
     });
   };
@@ -131,7 +110,7 @@ const HomePage = () => {
   useEffect(() => {
     // call handleMidiInputChange when page is returned to
     if (selectedInputId) {
-      // simulate a react change event with the current selectedInputId
+      // simulate a react change event with the current selectedInputId and send to handleMidiInputChange handler
       handleMidiInputChange({ target: { value: selectedInputId } } as React.ChangeEvent<HTMLSelectElement>);
     }
   }, [midiInputs, selectedInputId]);
@@ -161,7 +140,8 @@ const HomePage = () => {
           console.log(`Connection: ${input.connection}`);
         });
       });
-    } else {
+    } 
+    else {
       console.warn("Web MIDI API not supported in this browser.");
     }
   }, []);
@@ -224,16 +204,22 @@ const HomePage = () => {
       }
       // option for user specified mod by #
       else if (modByUserInputRef.current != null) {
-        // choosing to mod by THEN transpose
         console.log("note: " + note);
         console.log("modByNumImagesRef.current: " + modByNumImagesRef.current);
         console.log("transposeRef.current: " + transposeRef.current);
-        // const newIndex = (note % modByUserInputRef.current) + transposeRef.current;
+        // choosing to mod by THEN transpose
+        // and THEN mod by the # of images so that never out of bounds
         const newIndex = ((note % modByUserInputRef.current) + transposeRef.current) % imagesRef.current.length;
-        setCurrentImageIndex(newIndex);
+        if (newIndex >= 0) {
+          setCurrentImageIndex(newIndex);
+        }
+        else { // make sure new index is not less than 0, if < 0 set to 0
+          setCurrentImageIndex(0);
+          console.log("specified index < 0, setting index to 0");
+        }
         console.log("newIndex: " + newIndex);
       }
-      else {
+      else { // NOT REALLY SURE WHY WE WOULD GET HERE...
         const newIndex = (note + transposeRef.current);
         setCurrentImageIndex(newIndex);
         console.log("newIndex: " + newIndex);
@@ -270,7 +256,6 @@ const HomePage = () => {
   // ***
   
   return (
-    // items-start will move all children elements to the left
     <div className="flex flex-col items-center min-h-screen bg-gray-900 p-4">
       {/* see about moving image display to top eh it pushes everything else off of the screen */}
 
@@ -295,11 +280,11 @@ const HomePage = () => {
         </select>
       </div>
 
-      {/* <div className='flex gap-4 items-center justify-center mb-4'> */}
+      {/* items-start will move all children elements to the left */}
       <div className='flex gap-4 w-[95%] lg:w-[40%] items-start mb-4'>
         {/* File Upload Input */}
         <label className='inline-block px-6 py-3 bg-blue-500 text-white font-semibold text-center rounded cursor-pointer hover:bg-blue-600'>
-        Choose Files To Sequence
+          Choose Files To Sequence
           <input
             type="file"
             accept="image/*"
@@ -313,7 +298,6 @@ const HomePage = () => {
       </div>
 
       {/* modby # user input and toggle modby num images on same line */}
-      {/* <div className='flex items-center justify-center gap-4 mb-4'> */}
       <div className='flex w-[95%] lg:w-[40%] items-start gap-4 mb-4 items-center'>
         <label htmlFor="modby-input" className="text-white text-lg lg:text-2xl">
           Mod By:

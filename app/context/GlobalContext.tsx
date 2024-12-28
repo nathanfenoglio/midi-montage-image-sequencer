@@ -1,16 +1,10 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-
-interface ImageItem {
-    id: string;
-    url: string;
-}
+import { ImageItem } from "../types/image";
 
 // interface for all of the useState variables that you will create global context for
 interface GlobalContextProps {
-//   images: string[];
   images: ImageItem[];
-//   setImages: React.Dispatch<React.SetStateAction<string[]>>;
   setImages: React.Dispatch<React.SetStateAction<ImageItem[]>>;
   selectedInputId: string | null;
   setSelectedInputId: React.Dispatch<React.SetStateAction<string | null>>;
@@ -27,11 +21,10 @@ const GlobalContext = createContext<GlobalContextProps | undefined>(undefined);
 
 // export the global context provider for all files to be able to access 
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
-//   const [images, setImages] = useState<string[]>([]);
   const [images, setImages] = useState<ImageItem[]>([]);
   const [selectedInputId, setSelectedInputId] = useState<string | null>(null);
   const [modByNumImages, setModByNumImages] = useState(true);
-  const [modByUserInput, setModByUserInput] = useState(128);
+  const [modByUserInput, setModByUserInput] = useState(128); // just setting default to 128 (# of cells in an ableton drum rack)
   const [transpose, setTranspose] = useState(0);
 
   return (
