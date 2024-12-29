@@ -258,7 +258,7 @@ const HomePage = () => {
   // ***
   
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gray-900 p-4">
+    <div className="flex flex-col items-center w-full min-h-screen bg-gray-900 p-4">
       {/* see about moving image display to top eh it pushes everything else off of the screen */}
 
       <div className='mt-[2vh] mb-[6vh] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold'>
@@ -266,12 +266,12 @@ const HomePage = () => {
       </div>
 
       {/* MIDI Input Selection drop down menu */}
-      <div className="mb-4 w-[95%] lg:w-[40%] items-start">
-        <label className="text-white mr-2 text-lg lg:text-2xl">Select MIDI Input Port:</label>
+      <div className="mb-4 w-[95%] md:w-[50%] items-start md:text-center">
+        <label className="text-white mr-2 text-lg lg:text-3xl xl:text-2xl">Select MIDI Input Port:</label>
         <select
           onChange={handleMidiInputChange}
           value={selectedInputId || ''}
-          className="p-2 border border-gray-300 rounded"
+          className="p-2 border border-gray-300 rounded bg-[#00FFFF] text-md lg:text-lg xl:text-sm"
         >
           <option value="">-- Select Input --</option>
           {midiInputs.map((input) => (
@@ -283,9 +283,9 @@ const HomePage = () => {
       </div>
 
       {/* items-start will move all children elements to the left */}
-      <div className='flex gap-4 w-[95%] lg:w-[40%] items-start mb-4'>
+      <div className='flex gap-4 w-[95%] md:w-[50%] items-start md:flex-row md:items-center md:justify-center mb-4'>
         {/* File Upload Input */}
-        <label className='inline-block px-6 py-3 bg-blue-500 text-white font-semibold text-center rounded cursor-pointer hover:bg-blue-600'>
+        <label className='inline-block px-6 py-3 bg-blue-500 text-white text-lg lg:text-3xl xl:text-2xl font-semibold text-center rounded cursor-pointer hover:bg-blue-600'>
           Choose Files To Sequence
           <input
             type="file"
@@ -296,12 +296,12 @@ const HomePage = () => {
             className="hidden"
           />
         </label>
-        <p className='text-white text-lg lg:text-2xl'>{imagesRef.current.length} files uploaded</p>
+        <p className='text-white text-lg lg:text-3xl xl:text-2xl'>{imagesRef.current.length} files uploaded</p>
       </div>
 
       {/* modby # user input and toggle modby num images on same line */}
-      <div className='flex w-[95%] lg:w-[40%] items-start gap-4 mb-4 items-center'>
-        <label htmlFor="modby-input" className="text-white text-lg lg:text-2xl">
+      <div className="flex w-[95%] md:w-[50%] gap-4 mb-4 items-start md:flex-row md:items-center md:justify-center">
+        <label htmlFor="modby-input" className="text-white text-lg lg:text-3xl xl:text-2xl">
           Mod By:
         </label>
         <input
@@ -315,7 +315,7 @@ const HomePage = () => {
               modByUserInputRef.current = newValue;
             }
           }}
-          className="p-2 border border-gray-300 rounded"
+          className="p-2 mr-6 border border-gray-300 rounded bg-[#00FFFF] w-16 text-md lg:text-2xl xl:text-xl"
         />
 
         {/* mod by # of images checkbox */}
@@ -333,19 +333,18 @@ const HomePage = () => {
                   modByUserInputRef.current = newValue; // Update the reference value
                 }
               }}
-              className="w-10 h-10 lg:w-7 lg:h-7 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+              className="w-10 h-10 lg:w-10 lg:h-10 xl:w-7 xl:h-7 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
             />
-            <span className="text-white text-lg lg:text-2xl">Mod By # Images</span>
+            <span className="text-white text-lg lg:text-3xl xl:text-2xl">Mod By # Images</span>
           </label>
         )}
 
       </div>
 
       {/* transpose midi notes label and input */}
-      {/* <div className='flex items-center justify-center gap-4 mb-4'> */}
-      <div className='flex w-[95%] lg:w-[40%] items-start gap-4 mb-4'>
+      <div className='flex w-[95%] md:w-[50%] gap-4 mb-4 items-start md:flex-row md:items-center md:justify-center'>
         {/* Transpose Input */}
-        <label htmlFor="transpose-input" className="text-white text-lg lg:text-2xl">
+        <label htmlFor="transpose-input" className="text-white text-lg lg:text-3xl xl:text-2xl">
           Transpose MIDI Notes:
         </label>
         <input
@@ -353,19 +352,19 @@ const HomePage = () => {
           type="number"
           value={transpose}
           onChange={(e) => setTranspose(Number(e.target.value))}
-          className="p-2 border border-gray-300 rounded"
+          className="p-2 border border-gray-300 rounded bg-[#00FFFF] w-16 text-md lg:text-2xl xl:text-xl"
         />
       </div>
 
-      {/* start/stop button and fullscreen button on same line */}
-      <div className='flex gap-4'>
+      {/* start/stop button and fullscreen button and reorder images button on same line */}
+      <div className='flex gap-4 w-[95%] lg:w-[50%] justify-center mt-2'>
         {/* Start/Stop Button */}
         {images.length > 0 && (
           <button
             onClick={toggleSlideshow}
-            className={`px-4 py-2 rounded text-white ${
-              isPlaying ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`
-            }
+            className={`w-32 h-12 lg:w-36 lg:h-14 xl:w-32 xl:h-12 rounded text-white text-md lg:text-xl xl:text-lg flex items-center justify-center ${
+              isPlaying ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
+            }`}
           >
             {isPlaying ? "Stop" : "Start"}
           </button>
@@ -375,36 +374,31 @@ const HomePage = () => {
         {images.length > 0 &&
           <button
             onClick={makeFullScreen}
-            className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer flex items-center justify-center"
+            className="w-32 h-12 lg:w-36 lg:h-14 xl:w-32 xl:h-12 bg-blue-500 text-white text-md lg:text-xl xl:text-lg rounded cursor-pointer flex items-center justify-center hover:bg-blue-600"
           >
             Full Screen
           </button>
         }
-      </div>
 
-      <div className='p-4'>
+        {/* Reorder Images Screen Button */}
         <Link href="/reorder">
-          <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          <button className="w-32 h-12 lg:w-36 lg:h-14 xl:w-32 xl:h-12 bg-orange-500 text-white text-md lg:text-xl xl:text-lg rounded flex items-center justify-center hover:bg-orange-600">
             Reorder Images
           </button>
         </Link>
+
       </div>
 
-      {/* Image Slider */}
+      {/* Image Player */}
       <div ref={sliderRef} className="w-full max-w-4xl mt-4">
-        {images.length > 0 ? (
-          isPlaying ? (
+        {images.length > 0 && isPlaying && (
             <ImagePlayer
               images={images}
               intervals={durations}
               currentImageIndex={currentImageIndexRef.current}
             />
-          ) : (
-            <p className="text-gray-500">Click Start to begin the slideshow.</p>
-          )
-        ) : (
-          <p className="text-gray-500">Please upload images to start the slider.</p>
-        )}
+          ) 
+        }
       </div>
 
     </div>

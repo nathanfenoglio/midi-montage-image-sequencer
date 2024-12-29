@@ -46,6 +46,7 @@
 // and then clicks the position of where they want to insert the image that they're moving 
 // and every other image index adjusts  
 'use client';
+import Link from 'next/link';
 import { useGlobalContext } from '../context/GlobalContext';
 // import { Reorder } from "framer-motion" // npm install motion
 import ImageCard from './ImageCard';
@@ -93,19 +94,34 @@ const reorder = () => {
     };
 
   return(
-    <div>
-      <ul>
-          <div className='mt-20 w-[80%] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 items-center items-stretch'>
-            {images.map((img, index) => (
-              <ImageCard 
-                key={img.id}
-                imageInfo={img} 
-                onClick={handleImageClick}  // Pass the click handler to ImageCard
-                index={index}
-              />
-            ))}
-          </div>
-      </ul>
+    <div className='bg-gray-900 p-4'>
+      <h1 className='text-center w-[60%] mx-auto text-[#00FFFF] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold'>Reorder Images</h1>
+      <div className='w-[80%] md:w-[50%] mx-auto'>
+        <p className='text-center mt-6 text-xl md:text-2xl lg:text-3xl xl:text-4xl text-white font-bold text-opacity-60 transition-transform duration-300 animate-blink'>
+          Click the image that you would like to move <br/>
+          Then click the place in the sequence where you want the image to be placed
+        </p>
+        <div className='pt-8 text-center'>
+        <Link href="/">
+          <button className="px-8 py-4 bg-blue-500 text-white text-xl rounded hover:bg-blue-600">
+            Home
+          </button>
+        </Link>
+      </div>
+
+      </div>
+
+      {/* going with 2 columns on smaller and 4 on larger of whatever size */}
+      <div className='mt-20 w-[80%] mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 items-center items-stretch'>
+        {images.map((img, index) => (
+          <ImageCard 
+            key={img.id}
+            imageInfo={img} 
+            onClick={handleImageClick}  // Pass the click handler to ImageCard
+            index={index}
+          />
+        ))}
+      </div>
 
     </div>
   )
