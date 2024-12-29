@@ -52,10 +52,11 @@ import { useGlobalContext } from '../context/GlobalContext';
 import ImageCard from './ImageCard';
 import { useState } from 'react';
 
-const reorder = () => {
+// const reorder = () => {
+const Reorder = () => {
   const { images, setImages } = useGlobalContext();
   const [ fromIndex, setFromIndex ] = useState<number | null>(null);
-  const [ toIndex, setToIndex ] = useState<number | null>(null);
+  // const [ toIndex, setToIndex ] = useState<number | null>(null);
   const [ firstClickTurn, setFirstClickTurn ] = useState<boolean>(true);
 
     // handle the clicks on from and to image cards
@@ -69,7 +70,7 @@ const reorder = () => {
         setFirstClickTurn(false);  // Set the flag to false after the first click
       } else {
         console.log('else index: ' + index);
-        setToIndex(index);  // Set the toIndex when the second image is clicked
+        // setToIndex(index);  // Set the toIndex when the second image is clicked
         if (fromIndex !== null && fromIndex !== index) {
           const updatedImages = [...images]; // make copy of original array
           const movedItem = updatedImages[fromIndex];
@@ -88,7 +89,7 @@ const reorder = () => {
         }
         setFirstClickTurn(true);  // Reset flag for next round of clicks
         setFromIndex(null);  // Reset fromIndex after reordering
-        setToIndex(null);    // Reset toIndex after reordering
+        // setToIndex(null);    // Reset toIndex after reordering
       }
 
     };
@@ -127,5 +128,6 @@ const reorder = () => {
   )
 };
 
-export default reorder;
+// export default reorder;
+export default Reorder;
 

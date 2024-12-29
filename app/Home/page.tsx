@@ -235,26 +235,26 @@ const HomePage = () => {
   // Beats Per Minute
   // will not be used when receiving midi data from user as the tempo will be controlled by whatever is received in real time
   // ***
-  const BPM: number = 80;
+  // const BPM: number = 80;
 
   // not needed for incoming midi notes but leaving because may use for option to specify note/duration pattern without incoming midi notes
   // durations
-  const quarter: number = 1000 * (60/BPM);
-  const quarter3plet: number = (2000 / 3) * (60/BPM);
-  const eighth: number = 500 * (60/BPM);
-  const eighth3plet: number = (1000 / 3) * (60/BPM);
-  const sixteenth: number = 250 * (60/BPM);
-  const sixteenth3plet: number = (500 / 3) * (60/BPM);
-  const thirtysecond3plet: number = (250 / 3) * (60/BPM);
-  // an array of durations
-  const durations: number[] = [
-    quarter,
-    quarter,
-    quarter,
-    eighth3plet,
-    eighth3plet,
-    eighth3plet,
-  ];
+  // const quarter: number = 1000 * (60/BPM);
+  // const quarter3plet: number = (2000 / 3) * (60/BPM);
+  // const eighth: number = 500 * (60/BPM);
+  // const eighth3plet: number = (1000 / 3) * (60/BPM);
+  // const sixteenth: number = 250 * (60/BPM);
+  // const sixteenth3plet: number = (500 / 3) * (60/BPM);
+  // const thirtysecond3plet: number = (250 / 3) * (60/BPM);
+  // // an array of durations
+  // const durations: number[] = [
+  //   quarter,
+  //   quarter,
+  //   quarter,
+  //   eighth3plet,
+  //   eighth3plet,
+  //   eighth3plet,
+  // ];
   // ***
   
   return (
@@ -394,7 +394,9 @@ const HomePage = () => {
         {images.length > 0 && isPlaying && (
             <ImagePlayer
               images={images}
-              intervals={durations}
+              // intervals={durations}
+              // just passing empty array because not using duration intervals right now 
+              intervals={[]}
               currentImageIndex={currentImageIndexRef.current}
             />
           ) 
