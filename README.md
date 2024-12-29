@@ -12,9 +12,19 @@ Website created with Next.js </br>
 # Instructions
 ### Intro / Sign Up / Onboarding Screens
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/1.png)
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/signup.png)
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/welcome.png)
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/onboarding1.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/2.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/3.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/4.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/5.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/6.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/7.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/8.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/9.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/10.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/11.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/12.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/13.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/14.png)
 ### Add New Pet Profile
 ![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/onboarding2.png)
 ![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/add_new_pet.png)
