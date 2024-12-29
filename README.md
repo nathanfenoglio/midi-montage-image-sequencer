@@ -11,7 +11,7 @@ Website created with Next.js </br>
 
 # Instructions
 ### Intro / Sign Up / Onboarding Screens
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/intro.png)
+![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/1.png)
 ![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/signup.png)
 ![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/welcome.png)
 ![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/onboarding1.png)
