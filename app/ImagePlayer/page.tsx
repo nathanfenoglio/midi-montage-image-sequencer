@@ -2,13 +2,20 @@
 import Image from "next/image"; 
 import { ImageItem } from "../types/image";
 
+// type ImagePlayerProps = {
+//   images: ImageItem[];
+//   intervals: number[];
+//   currentImageIndex: number;
+// }
+
 type ImagePlayerProps = {
   images: ImageItem[];
-  intervals: number[];
+  // intervals: number[];
   currentImageIndex: number;
 }
 
-const ImagePlayer = ({ images, intervals, currentImageIndex }: ImagePlayerProps) => {
+// const ImagePlayer = ({ images, intervals, currentImageIndex }: ImagePlayerProps) => {
+const ImagePlayer = ({ images, currentImageIndex }: ImagePlayerProps) => {
   // so if you are able to receive midi notes, then you I suppose don't need to worry about the interval duration 
   // leaving below for now commented out, will probably add the possibility to sequence without incoming midi notes too...
   
