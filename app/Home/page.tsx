@@ -395,8 +395,9 @@ const HomePage = () => {
             <ImagePlayer
               images={images}
               // intervals={durations}
-              // just passing empty array because not using duration intervals right now 
-              intervals={[]}
+              // just passing empty array because not using duration intervals right now
+              // commenting out entirely for now 
+              // intervals={[]}
               currentImageIndex={currentImageIndexRef.current}
             />
           ) 
