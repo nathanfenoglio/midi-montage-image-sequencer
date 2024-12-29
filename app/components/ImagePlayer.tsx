@@ -1,20 +1,7 @@
 "use client";
 import Image from "next/image"; 
-// import { ImageItem } from "../types/image";
+import { ImageItem } from "../types/image";
 
-// type ImagePlayerProps = {
-//   images: ImageItem[];
-//   intervals: number[];
-//   currentImageIndex: number;
-// }
-
-interface ImageItem {
-  id: string;
-  url: string;
-}
-
-
-// I KEEP GETTING THE BUILD ERROR THAT ImagePlayerProps IS NOT VALID...
 type ImagePlayerProps = {
   images: ImageItem[];
   currentImageIndex: number;

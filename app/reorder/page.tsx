@@ -1,47 +1,3 @@
-//  'use client';
-// import { useGlobalContext } from '../context/GlobalContext';
-// import { Reorder } from "framer-motion" // npm install motion
-
-// const reorder = () => {
-//   const { images, setImages } = useGlobalContext();
-
-//   return(
-//     // NEED TO STYLE AND PROBABLY DO A GRID DRUM RACK LOOKING DISPLAY...
-//     <div>
-//       <ul>
-//         {/* onReorder will have the reordered list so set the images array to the user's reordered list */}
-//         <Reorder.Group values={images} onReorder={setImages}>
-//           {images.map((img, index) => (
-//             // wrap whatever part you want for the user to be able to click and drag with <Reorder.Item>
-//             <Reorder.Item value={img} key={img.id}>
-//               <li 
-//                 style={{
-//                   padding: '8px',
-//                   margin: '4px 0',
-//                   backgroundColor: '#f0f0f0',
-//                   border: '1px solid #ccc',
-//                   borderRadius: '4px',
-//                   cursor: 'grab',
-//                 }}
-//               >
-//                 <img
-//                   src={img.url}
-//                   alt="Uploaded"
-//                   style={{ maxWidth: '100px', maxHeight: '100px' }}
-//                 />
-//               </li>
-//             </Reorder.Item>
-//           ))}
-//         </Reorder.Group>
-//       </ul>
-
-//     </div>
-//   )
-// };
-
-// export default reorder;
-
-// ABOVE IS WORKING FINE JUST RESTYLING ETC BELOW
 // ended up going with where the user 1st clicks the image that they want to move 
 // and then clicks the position of where they want to insert the image that they're moving 
 // and every other image index adjusts  
@@ -52,11 +8,9 @@ import { useGlobalContext } from '../context/GlobalContext';
 import ImageCard from './ImageCard';
 import { useState } from 'react';
 
-// const reorder = () => {
 const Reorder = () => {
   const { images, setImages } = useGlobalContext();
   const [ fromIndex, setFromIndex ] = useState<number | null>(null);
-  // const [ toIndex, setToIndex ] = useState<number | null>(null);
   const [ firstClickTurn, setFirstClickTurn ] = useState<boolean>(true);
 
     // handle the clicks on from and to image cards
@@ -68,9 +22,9 @@ const Reorder = () => {
       if (firstClickTurn) {
         setFromIndex(index);  // Set the fromIndex when the first image is clicked
         setFirstClickTurn(false);  // Set the flag to false after the first click
-      } else {
+      } 
+      else { // 2nd click (move image to index)
         console.log('else index: ' + index);
-        // setToIndex(index);  // Set the toIndex when the second image is clicked
         if (fromIndex !== null && fromIndex !== index) {
           const updatedImages = [...images]; // make copy of original array
           const movedItem = updatedImages[fromIndex];
@@ -89,7 +43,6 @@ const Reorder = () => {
         }
         setFirstClickTurn(true);  // Reset flag for next round of clicks
         setFromIndex(null);  // Reset fromIndex after reordering
-        // setToIndex(null);    // Reset toIndex after reordering
       }
 
     };
@@ -128,6 +81,5 @@ const Reorder = () => {
   )
 };
 
-// export default reorder;
 export default Reorder;
 

@@ -1,7 +1,6 @@
 "use client"
 import React, { useEffect, useState, useRef } from 'react'
 // import Instructions from './Instructions/page'
-// import ImagePlayer from '../ImagePlayer/page'
 import ImagePlayer from '../components/ImagePlayer'
 import Link from 'next/link';
 // global context variables to persist when navigating to different pages
@@ -395,10 +394,8 @@ const HomePage = () => {
         {images.length > 0 && isPlaying && (
             <ImagePlayer
               images={images}
-              // intervals={durations}
-              // just passing empty array because not using duration intervals right now
               // commenting out entirely for now 
-              // intervals={[]}
+              // intervals={durations}
               currentImageIndex={currentImageIndexRef.current}
             />
           ) 
