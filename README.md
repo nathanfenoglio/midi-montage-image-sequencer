@@ -30,8 +30,7 @@ https://midi-montage-image-sequencer.vercel.app/
 ### click on Full Screen to have image player fill screen to display in sync with music during live performance
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/7.png)
 
-<!-- ## Mod By / Mod By # Images -->
-<h2 style="color: purple;">Mod By / Mod By # Images</h2>
+## Mod By / Mod By # Images
 ### "Mod By" specifies what the incoming midi note will be modded by
 ### for example incoming midi note of 67 with "Mod By" set at 64 will trigger image 3 in images array 67 % 64 = 3
 ### "Mod By" is by default set to the # of images that the user uploaded
