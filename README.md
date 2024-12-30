@@ -2,15 +2,15 @@
 Please use with your midi device at: </br>
 https://midi-montage-image-sequencer.vercel.app/
 </br>
-Website created with Next.js </br>
-
-# Midi Montage Image Sequencer
 - created with Next.js and Tailwind CSS using Web MIDI API to receive MIDI messages 
 
 # instantly sync midi notes with mapped images in real time for live performance or visual montage compositions 
 
 # Instructions
-### Intro / Sign Up / Onboarding Screens
+### go to https://midi-montage-image-sequencer.vercel.app/
+### select midi input port from drop down menu
+### (need ports set up on computer, I use LoopBe30 for windows os)
+### https://www.nerds.de/en/loopbe30.html
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/1.png)
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/2.png)
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/3.png)
