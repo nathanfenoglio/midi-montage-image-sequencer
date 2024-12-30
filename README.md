@@ -3,8 +3,9 @@ Please use with your midi device at: </br>
 https://midi-montage-image-sequencer.vercel.app/
 </br>
 - created with Next.js and Tailwind CSS using Web MIDI API to receive MIDI messages 
+- runs in web browser, requires no setup if user already has midi ports configured on device
 
-# instantly sync midi notes with mapped images in real time for live performance or visual montage compositions 
+# instantly sync midi notes with mapped images in real time for live performance or visual montage composition 
 
 # Instructions
 ### go to https://midi-montage-image-sequencer.vercel.app/
