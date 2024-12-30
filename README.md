@@ -12,80 +12,53 @@ https://midi-montage-image-sequencer.vercel.app/
 ### (need ports set up on computer, I use LoopBe30 for windows os)
 ### https://www.nerds.de/en/loopbe30.html
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/1.png)
+### select image files to sequence from your device
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/2.png)
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/3.png)
+### set up midi send from daw or through internal routing in computer
+### send midi to midi input port selected from drop down
+### can use prewritten midi notes or played real time with whatever midi controller device that you have configured
+### 
+### example sending midi from Ableton Live
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/4.png)
+### example sending midi from Supercollider
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/5.png)
+### click Start button to display images triggered by incoming midi notes
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/6.png)
+### images will display in real time with midi notes received by app
+###
+### click on Full Screen to have image player fill screen to display in sync with music during live performance
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/7.png)
+
+## Mod By / Mod By # Images
+### "Mod By" specifies what the incoming midi note will be modded by
+### for example incoming midi note of 67 with "Mod By" set at 64 will trigger image 3 in images array 67 % 64 = 3
+### "Mod By" is by default set to the # of images that the user uploaded
+### to specify customer "Mod By" value, uncheck "Mod By # Images" checkbox
+### and input new value for "Mod By"
+### this value can be used to experiment with to produce patterns with varying range constrained by the "Mod By" value
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/8.png)
+
+## Transpose MIDI Notes
+### parameter for user to specify the # of midi notes that each incoming midi note will be transposed up or down by
+### "Transpose MIDI Notes" is by default 0 (midi notes received will be unchanged)
+### can be used to move an incoming midi note pattern to cover different areas of the uploaded images
+### can be used in conjunction with "Mod By". "Mod By" to narrow the window of images being triggered,  "Transpose MIDI Notes" to move the window through the image array
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/9.png)
+
+## Reorder Images
+### "Reorder Images" provides the ability to rearrange the uploaded images' positions' in the images array
+### for instance if you are sending midi note 48 to trigger image 48 but want a different image at index 48 to trigger, can rearrange the array on this page
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/10.png)
+### click the image that you are wanting to move
+### then click the image of where you would like to insert the 1st image that you clicked
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/11.png)
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/12.png)
+### return to Home Page 
+### and choose to Start image sequence again
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/13.png)
+### click on Full Screen to have image player fill screen to display in sync with music during live performance
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/14.png)
-### Add New Pet Profile
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/onboarding2.png)
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/add_new_pet.png)
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/add_new_pet_2.png)
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/enter_pet_details.png)
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/add_new_pet_2.png)
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/pet_registered.png)
-### Virtual Vet Chatbot
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/pet_profile.png)
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/ai_screen_select_pet.png)
-### separate conversation thread per registered pet for personalized pet advice
-### if 1st time inquiring about pet, new conversation thread created and pet details sent to OpenAI assistant
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/new_thread_pet_details_sent.png)
-### user query about pet
-### "my pet has not been eating much of anything even though food has been regularly available for the last 2 days and I am concerned"
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/ai_screen_pet_query.png)
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/ai_screen_assistant_response.png)
-### previous conversation info retained per pet profile
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/ai_screen_previous_conversation_thread_evidence.png)
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/ai_screen_previous_conversation_thread_evidence_2.png)
-### Journal Screen
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/journal_date_picker.png)
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/journal_add_entry.png)
-### Find Nearest Vets Screen
-![alt_image](https://github.com/nathanfenoglio/SmartPaws/blob/main/images/map_screen.png)
 
+# https://midi-montage-image-sequencer.vercel.app/
 
-# Setup Instructions
-(If wanting to setup app to run with your own credentials/accounts)
-- MongoDB - sign up for account https://www.mongodb.com/
-- Firebase - sign up for account https://firebase.google.com/docs/auth
-- OpenAI - sign up for account https://platform.openai.com/signup
-- Google Maps - get API key https://developers.google.com/maps/documentation/javascript/get-api-key
-- install node.js on your computer if you haven't already https://nodejs.org/en/download
-- clone git repo in whatever directory you want on your computer git clone https://github.com/nathanfenoglio/SmartPaws.git
-- go into both directories and run npm install in each
-  - cd into SmartPawsFrontend, npm install
-  - cd into SmartPawsBackend, npm install
-- add file ".env" to SmartPawsBackend SmartPawsBackend/.env
-  - MONGODB_CONNECTION_STRING=YOUR_MONGODB_CONNECTION_STRING
-  - OPENAI_API_KEY=YOUR_OPENAI_API_KEY
-  - PORT=1337
-- add file ".env" to SmartPawsFrontend SmartPawsFrontend/src/.env
-  - BASE_URL=`YOUR_IP_ADDRESS`
-  - API_KEY=YOUR_FIREBASE_API_KEY
-  - AUTH_DOMAIN=YOUR_FIREBASE_AUTH_DOMAIN
-  - PROJECT_ID=YOUR_FIREBASE_PROJECT_ID
-  - STORAGE_BUCKET=YOUR_FIREBASE_STORAGE_BUCKET
-  - MESSAGING_SENDER_ID=YOUR_FIREBASE_MESSAGING_SENDER_ID
-  - APP_ID=YOUR_FIREBASE_APP_ID
-  - MEASUREMENT_ID=YOUR_FIREBASE_MEASUREMENT_ID
-  - GOOGLE_MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY
-  - CHATGPT_GEN_THREAD_ID=YOUR_CHATGPT_GEN_THREAD_ID
-- running app locally
-  - download expo go on your phone (can search for it in app store or google play)
-  - this will let you scan a qr code to be able to debug on your phone
-  - or could also use emulator on your computer using android studio to debug on computer
-  - start backend server cd into SmartPawsBackend, npm start
-  - start frontend in another terminal window cd into SmartPawsFrontend, npx expo start
-  - open expo go on phone
-  - select "Scan QR code" and scan QR code from terminal
-
-# Download From Google Play or Apple App Store
-### deployment to come in future...
