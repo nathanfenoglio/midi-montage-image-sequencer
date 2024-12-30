@@ -34,7 +34,7 @@ https://midi-montage-image-sequencer.vercel.app/
 ### "Mod By" specifies what the incoming midi note will be modded by
 ### for example incoming midi note of 67 with "Mod By" set at 64 will trigger image 3 in images array 67 % 64 = 3
 ### "Mod By" is by default set to the # of images that the user uploaded
-### to specify customer "Mod By" value, uncheck "Mod By # Images" checkbox
+### to specify custom "Mod By" value, uncheck "Mod By # Images" checkbox
 ### and input new value for "Mod By"
 ### this value can be used to experiment with to produce patterns with varying range constrained by the "Mod By" value
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/8.png)
