@@ -261,9 +261,16 @@ const HomePage = () => {
     <div className="flex flex-col items-center w-full min-h-screen bg-gray-900 p-4">
       {/* see about moving image display to top eh it pushes everything else off of the screen */}
 
-      <div className='mt-[2vh] mb-[6vh] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold'>
+      <div className='mt-[2vh] mb-[3vh] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold'>
         <h1 className='text-center w-[60%] mx-auto text-[#00FFFF]'>Midi Montage Image Sequencer</h1>
       </div>
+
+      <a
+        href='../Instructions'
+        className="mb-4 w-32 h-12 lg:w-36 lg:h-14 xl:w-32 xl:h-12 bg-blue-500 text-white text-md lg:text-xl xl:text-lg rounded cursor-pointer flex items-center justify-center hover:bg-blue-600"
+      >
+        Instructions
+      </a>
 
       {/* MIDI Input Selection drop down menu */}
       <div className="mb-4 w-[95%] md:w-[50%] items-start md:text-center">
