@@ -65,9 +65,10 @@ const Reorder = () => {
       <div className='w-[80%] md:w-[50%] mx-auto'>
         <p className='text-center mt-6 text-xl md:text-2xl lg:text-3xl xl:text-4xl text-white font-bold text-opacity-60 transition-transform duration-300 animate-blink'>
           Click the image that you would like to move <br/>
-          Then click the place in the sequence where you want the image to be placed
+          Then click the place in the sequence where you want the image to be placed <br/>
+          Click Randomize to randomize the image order
         </p>
-        <div className='pt-8 text-center space-x-4'>
+        <div className='pt-8 text-center space-x-4 space-y-8'>
           {/* Home button */}
           <Link href="/">
             <button className="px-8 py-4 bg-blue-500 text-white text-xl rounded hover:bg-blue-600">
@@ -77,7 +78,7 @@ const Reorder = () => {
           {/* Randomize button */}
           <button
             onClick={randomizeImages}
-            className="px-8 py-4 bg-green-500 text-white text-xl rounded hover:bg-green-600"
+            className="px-8 py-4 bg-red-500 text-white text-xl rounded hover:bg-green-600"
           >
             Randomize
           </button>
@@ -91,7 +92,7 @@ const Reorder = () => {
           <ImageCard 
             key={img.id}
             imageInfo={img} 
-            onClick={handleImageClick}  // Pass the click handler to ImageCard
+            onClick={handleImageClick}  
             index={index}
           />
         ))}
