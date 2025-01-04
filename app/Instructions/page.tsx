@@ -4,7 +4,7 @@ import React from 'react'
 const Instructions = () => {
   return (
     <div className='pb-16 bg-gradient-to-r from-black via-purple-500 to-grey-500 text-white overflow-hidden'>
-      <div data-aos='fade-right' data-aos-delay='100' className='mt-[2vh] text-zinc-950 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold'>
+      <div data-aos='fade-right' data-aos-delay='100' className='mt-[2vh] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold'>
         <h1 className='text-center w-[60%] mx-auto text-[#00FFFF]'>Midi Montage Image Sequencer</h1>
       </div>
 
@@ -20,6 +20,15 @@ const Instructions = () => {
           className="mb-4 w-32 h-12 lg:w-36 lg:h-14 xl:w-32 xl:h-12 bg-orange-500 text-white text-md lg:text-xl xl:text-lg rounded cursor-pointer flex items-center justify-center hover:bg-blue-600"
         >
           Home
+        </a>
+      </div>
+
+      <div className='mt-6 w-[80%] mx-auto flex flex-col items-center justify-center'>
+        <a
+          href='https://www.nathan-fenoglio.com/'
+          className="text-[#00FFFF] text-xl lg:text-3xl xl:text-4xl hover:bg-blue-600 p-4"
+        >
+          nathan-fenoglio.com
         </a>
       </div>
 
