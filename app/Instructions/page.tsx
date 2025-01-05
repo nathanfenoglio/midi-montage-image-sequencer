@@ -128,6 +128,15 @@ const Instructions = () => {
             <Image src='/images/midi_image_seq_10.png' alt='midi_image_seq_10' layout='fill' objectFit='contain' className='rounded-lg'/>
           </div>
 
+          <div className='w-[80%] lg:w-[50%] pl-2 xl:pl-6 mx-auto text-start text-lg md:text-xl text-opacity-60 font-bold text-white mt-12'>
+            <ul className='list-disc pl-5 space-y-4'>
+              <li>Select Randomize if you want to randomize the order of your images</li>
+            </ul>
+          </div>
+          <div className='relative w-full h-[350px] overflow-hidden rounded-lg md:mt-6'>
+            <Image src='/images/midi_image_seq_random.png' alt='midi_image_seq_10' layout='fill' objectFit='contain' className='rounded-lg'/>
+          </div>
+
           <div className='w-[80%] lg:w-[50%] pl-2 xl:pl-6 mx-auto text-start text-lg md:text-xl text-opacity-60 font-bold text-white'>
             <ul className='list-disc pl-5 space-y-4'>
               <li className='mt-12'>click the image that you are wanting to move</li>
