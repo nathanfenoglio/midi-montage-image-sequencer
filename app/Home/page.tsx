@@ -26,7 +26,7 @@ const HomePage = () => {
   } = useGlobalContext();
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // doesn't need to persist globally like many of the other variables
-  const currentImageIndexRef = useRef<number>(0);
+  // const currentImageIndexRef = useRef<number>(0);
 
   // need useRef to make sure that images are uploaded before midi notes attempt to access image array
   const imagesRef = useRef<ImageItem[]>([]);
@@ -104,9 +104,10 @@ const HomePage = () => {
     modByUserInputRef.current = modByUserInput;
   }, [modByUserInput]);
 
-  useEffect(() => {
-    currentImageIndexRef.current = currentImageIndex;
-  }, [currentImageIndex]);
+  // REMOVING currentImageIndexRef WAS CAUSING ERRORS WITH SETTING IMAGE INDEX 
+  // useEffect(() => {
+  //   currentImageIndexRef.current = currentImageIndex;
+  // }, [currentImageIndex]);
 
   // needed to reassign midi handler for WEB MIDI API onmidimessage when user returns from another page
   useEffect(() => {
@@ -201,8 +202,16 @@ const HomePage = () => {
       // mod note by # of images or not based on user toggle button
       if (modByNumImagesRef.current) {
         const newIndex = (note + transposeRef.current) % imagesRef.current.length;
-        setCurrentImageIndex(newIndex);
+        if (newIndex >= 0) {
+          setCurrentImageIndex(newIndex);
+        }
+        else { // make sure new index is not less than 0, if < 0 set to 0
+          setCurrentImageIndex(0);
+          console.log("specified index < 0, setting index to 0");
+        }
         console.log("newIndex: " + newIndex);
+        // setCurrentImageIndex(newIndex);
+        // console.log("newIndex: " + newIndex);
       }
       // option for user specified mod by #
       else if (modByUserInputRef.current != null) {
@@ -403,7 +412,8 @@ const HomePage = () => {
               images={images}
               // commenting out entirely for now 
               // intervals={durations}
-              currentImageIndex={currentImageIndexRef.current}
+              // currentImageIndex={currentImageIndexRef.current}
+              currentImageIndex={currentImageIndex}
             />
           ) 
         }
