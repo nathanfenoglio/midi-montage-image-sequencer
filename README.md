@@ -9,7 +9,7 @@ https://midi-montage-image-sequencer.vercel.app/
 
 # Instructions
 ### go to https://midi-montage-image-sequencer.vercel.app/
-### select midi input port from drop down menu
+### select midi input port or midi controller device from drop down menu
 ### (need ports set up on computer, I use LoopBe30 for windows os)
 ### https://www.nerds.de/en/loopbe30.html
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/1.png)

@@ -37,7 +37,7 @@ const Instructions = () => {
         <h2 className='text-center text-lime-400 mt-[3vh] lg:mb-[3vh] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold'>Instructions</h2>
         <div className='w-[80%] mx-auto text-center text-lg md:text-xl text-opacity-60 font-bold text-white'>
           {/* select midi input port */}
-          <p className='mt-6'>select midi input port from drop down menu</p>
+          <p className='mt-6'>select midi input port or midi controller device from drop down menu</p>
           <p>(need ports set up on computer, I use LoopBe30 for windows os)</p>
           <a href='https://www.nerds.de/en/loopbe30.html' target='_blank'>https://www.nerds.de/en/loopbe30.html</a>
           <div className='relative w-full h-[300px] overflow-hidden rounded-lg md:mt-6'>
