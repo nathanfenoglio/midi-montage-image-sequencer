@@ -1,6 +1,5 @@
 "use client"
 import React, { useEffect, useState, useRef } from 'react'
-// import Instructions from './Instructions/page'
 import ImagePlayer from '../components/ImagePlayer'
 import Link from 'next/link';
 // global context variables to persist when navigating to different pages
@@ -26,7 +25,6 @@ const HomePage = () => {
   } = useGlobalContext();
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // doesn't need to persist globally like many of the other variables
-  // const currentImageIndexRef = useRef<number>(0);
 
   // need useRef to make sure that images are uploaded before midi notes attempt to access image array
   const imagesRef = useRef<ImageItem[]>([]);
@@ -103,11 +101,6 @@ const HomePage = () => {
   useEffect(() => {
     modByUserInputRef.current = modByUserInput;
   }, [modByUserInput]);
-
-  // REMOVING currentImageIndexRef WAS CAUSING ERRORS WITH SETTING IMAGE INDEX 
-  // useEffect(() => {
-  //   currentImageIndexRef.current = currentImageIndex;
-  // }, [currentImageIndex]);
 
   // needed to reassign midi handler for WEB MIDI API onmidimessage when user returns from another page
   useEffect(() => {
@@ -210,8 +203,6 @@ const HomePage = () => {
           console.log("specified index < 0, setting index to 0");
         }
         console.log("newIndex: " + newIndex);
-        // setCurrentImageIndex(newIndex);
-        // console.log("newIndex: " + newIndex);
       }
       // option for user specified mod by #
       else if (modByUserInputRef.current != null) {
@@ -412,7 +403,6 @@ const HomePage = () => {
               images={images}
               // commenting out entirely for now 
               // intervals={durations}
-              // currentImageIndex={currentImageIndexRef.current}
               currentImageIndex={currentImageIndex}
             />
           ) 
