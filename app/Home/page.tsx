@@ -1,3 +1,4 @@
+// npm install webmidi
 "use client"
 import React, { useEffect, useState, useRef } from 'react'
 import ImagePlayer from '../components/ImagePlayer'
@@ -52,7 +53,6 @@ const HomePage = () => {
 
   // toggle play/stop
   const toggleSlideshow = () => {
-    console.log("isPlaying: " + isPlaying);
     setIsPlaying((prev) => !prev); 
   };
 
@@ -262,7 +262,7 @@ const HomePage = () => {
       {/* see about moving image display to top eh it pushes everything else off of the screen */}
 
       <div className='mt-[2vh] mb-[3vh] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold'>
-        <h1 className='text-center w-[60%] mx-auto text-[#00FFFF]'>Midi Montage Image Sequencer</h1>
+        <h1 className='text-center w-[60%] mx-auto text-[#00FFFF]'>Midi Montage Image Sequencer Flam</h1>
       </div>
 
       <a
