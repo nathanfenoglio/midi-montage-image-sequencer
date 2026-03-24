@@ -1,6 +1,6 @@
 // npm install webmidi
 "use client"
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import ImagePlayer from '../components/ImagePlayer'
 import Link from 'next/link';
 // global context variables to persist when navigating to different pages
@@ -102,15 +102,6 @@ const HomePage = () => {
     modByUserInputRef.current = modByUserInput;
   }, [modByUserInput]);
 
-  // needed to reassign midi handler for WEB MIDI API onmidimessage when user returns from another page
-  useEffect(() => {
-    // call handleMidiInputChange when page is returned to
-    if (selectedInputId) {
-      // simulate a react change event with the current selectedInputId and send to handleMidiInputChange handler
-      handleMidiInputChange({ target: { value: selectedInputId } } as React.ChangeEvent<HTMLSelectElement>);
-    }
-  }, [midiInputs, selectedInputId]);
-
   // request access to receive MIDI from user
   // and save available midi inputs in array to display for user to select 
   useEffect(() => {
@@ -142,46 +133,9 @@ const HomePage = () => {
     }
   }, []);
 
-  // midi input selection change handler
-  const handleMidiInputChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const inputId = event.target.value;
-
-    // clear the listener for the previously selected input if input was previously selected
-    if (selectedInputId) {
-      const previousInput = midiInputs.find((input) => input.id === selectedInputId);
-      if (previousInput) {
-        previousInput.onmidimessage = null; // remove previous listener by selecting null instead of your event handler handleMIDIMessage 
-        console.log(`Disconnected from: ${previousInput.name}`);
-      }
-    }
-
-    // set input id to new input id selected by user
-    setSelectedInputId(inputId);
-
-    // listen and handle midi messages from user specified input
-    // for you selectedInput that you use for supercollider out is 01. Internal MIDI
-    const selectedInput = midiInputs.find((input) => input.id === inputId);
-    if (selectedInput) {
-      // WEB MIDI API onmidimessage allows you to assign an event handler function to be used for incoming midi messages 
-      selectedInput.onmidimessage = handleMIDIMessage;
-      console.log(`Connected to: ${selectedInput.name}`);
-    }    
-
-    // just printing all of the available attributes of a MIDIInput object
-    // it's always one behind the actual state but just printing so leaving alone 
-    midiInputs.forEach((input) => {
-      console.log(`ID: ${input.id}`);
-      console.log(`Name: ${input.name}`);
-      console.log(`Manufacturer: ${input.manufacturer}`);
-      console.log(`Type: ${input.type}`);
-      console.log(`Version: ${input.version}`);
-      console.log(`State: ${input.state}`);
-      console.log(`Connection: ${input.connection}`);
-    });
-    
-  };
-  
-  const handleMIDIMessage = (message: WebMidi.MIDIMessageEvent) => {
+  // use useCallback to memoize function so that it won't get recreated unless one of its dependencies changes
+  // so that handleMidiInputChange is not triggered every time the page renders so that it can be used in the useEffect that is triggered when the user returns to the page
+  const handleMIDIMessage = useCallback((message: WebMidi.MIDIMessageEvent) => {
     // destructure midi note message
     const [command, note, velocity] = message.data;
   
@@ -230,7 +184,56 @@ const HomePage = () => {
       console.log(note);
       console.log("transposeRef.current: " + transposeRef.current);
     }
-  };
+  }, []);
+
+  // midi input selection change handler
+  // use useCallback to memoize function so that it won't get recreated unless one of its dependencies changes
+  // and so that it can be used in the useEffect that is triggered when the user returns to the page without it triggering the useEffect to be run every time the component re-renders
+  const handleMidiInputChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
+    const inputId = event.target.value;
+
+    // clear the listener for the previously selected input if input was previously selected
+    if (selectedInputId) {
+      const previousInput = midiInputs.find((input) => input.id === selectedInputId);
+      if (previousInput) {
+        previousInput.onmidimessage = null; // remove previous listener by selecting null instead of your event handler handleMIDIMessage 
+        console.log(`Disconnected from: ${previousInput.name}`);
+      }
+    }
+
+    // set input id to new input id selected by user
+    setSelectedInputId(inputId);
+
+    // listen and handle midi messages from user specified input
+    // for you selectedInput that you use for supercollider out is 01. Internal MIDI
+    const selectedInput = midiInputs.find((input) => input.id === inputId);
+    if (selectedInput) {
+      // WEB MIDI API onmidimessage allows you to assign an event handler function to be used for incoming midi messages 
+      selectedInput.onmidimessage = handleMIDIMessage;
+      console.log(`Connected to: ${selectedInput.name}`);
+    }    
+
+    // just printing all of the available attributes of a MIDIInput object
+    // it's always one behind the actual state but just printing so leaving alone 
+    midiInputs.forEach((input) => {
+      console.log(`ID: ${input.id}`);
+      console.log(`Name: ${input.name}`);
+      console.log(`Manufacturer: ${input.manufacturer}`);
+      console.log(`Type: ${input.type}`);
+      console.log(`Version: ${input.version}`);
+      console.log(`State: ${input.state}`);
+      console.log(`Connection: ${input.connection}`);
+    });
+  }, [selectedInputId, midiInputs, setSelectedInputId, handleMIDIMessage]);
+
+  // needed to reassign midi handler for WEB MIDI API onmidimessage when user returns from another page
+  useEffect(() => {
+    // call handleMidiInputChange when page is returned to
+    if (selectedInputId) {
+      // simulate a react change event with the current selectedInputId and send to handleMidiInputChange handler
+      handleMidiInputChange({ target: { value: selectedInputId } } as React.ChangeEvent<HTMLSelectElement>);
+    }
+  }, [midiInputs, selectedInputId, handleMidiInputChange]);
  
   // Beats Per Minute
   // will not be used when receiving midi data from user as the tempo will be controlled by whatever is received in real time
