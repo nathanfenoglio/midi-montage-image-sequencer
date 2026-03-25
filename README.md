@@ -1,6 +1,6 @@
 # Midi Montage Image Sequencer
 Please use with your midi device at: </br>
-https://midi-montage-image-sequencer.vercel.app/
+https://midi-montage-image-sequencer-fym4.vercel.app/
 </br>
 - created with Next.js and Tailwind CSS using Web MIDI API to receive MIDI messages 
 - runs in web browser, requires no setup if user already has midi ports configured on device
@@ -8,7 +8,7 @@ https://midi-montage-image-sequencer.vercel.app/
 # instantly sync midi notes with mapped images in real time for live performance or visual montage composition 
 
 # Instructions
-### go to https://midi-montage-image-sequencer.vercel.app/
+### go to https://midi-montage-image-sequencer-fym4.vercel.app/
 ### select midi input port or midi controller device from drop down menu
 ### (need ports set up on computer, I use LoopBe30 for windows os)
 ### https://www.nerds.de/en/loopbe30.html
@@ -61,5 +61,5 @@ https://midi-montage-image-sequencer.vercel.app/
 ### click on Full Screen to have image player fill screen to display in sync with music during live performance
 ![alt_image](https://github.com/nathanfenoglio/midi-montage-image-sequencer/blob/main/readme_images/14.png)
 
-# https://midi-montage-image-sequencer.vercel.app/
+# https://midi-montage-image-sequencer-fym4.vercel.app/
 
