@@ -129,6 +129,9 @@ const Instructions = () => {
               <li>if the transposition moves below the first image, it wraps around to the last image</li>
             </ul>
           </div>
+          <div className='relative w-full h-[200px] md:h-[300px] overflow-hidden rounded-lg md:mt-6'>
+            <Image src='/images/midi_image_seq_transpose_repeat.png' alt='midi_image_seq_transpose_repeat' layout='fill' objectFit='contain' className='rounded-lg'/>
+          </div>
 
           {/* Reorder Images */}
           <h1 className='text-[#FFD700] text-3xl sm:text-4xl md:text-5xl mt-12'>Reorder Images</h1>

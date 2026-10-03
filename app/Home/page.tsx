@@ -44,6 +44,14 @@ const HomePage = () => {
   const transposeRef = useRef<number>(0);
 
   // transpose repeat option to steadily transpose up/down by transposeRepeatAmount every notesBeforeTranspose notes received
+  // so if transposeRepeatAmountRef was 2 and notesBeforeTransposeRef was 7
+  // and Transpose MIDI Notes was 48
+  // and the midi notes that were being sent in were 0, 2, 3, 5, 7, 8, 10
+  // then the sequence would go
+  // 48, 50, 51, 53, 55, 56, 58
+  // 50, 52, 53, 55, 57, 58, 60
+  // 52, 54, 55 57, 59, 60, 62
+  // Etc. 
   const transposeRepeatRef = useRef<boolean>(false);
   const transposeRepeatAmountRef = useRef<number>(0);
   const notesBeforeTransposeRef = useRef<number>(0);
@@ -176,6 +184,7 @@ const HomePage = () => {
     if ((command & 0xf0) === 144 && velocity > 0) { // Note On
       // console.log(`Images length: ${imagesRef.current.length}`);
 
+      // baseline transpose + if Transpose Repeat is on then wherever we are in transposing further
       const repeatOn = transposeRepeatRef.current;
       const totalTranspose = transposeRef.current + (repeatOn ? repeatOffsetRef.current : 0);
 
