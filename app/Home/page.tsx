@@ -23,6 +23,12 @@ const HomePage = () => {
     setModByUserInput,
     transpose,
     setTranspose,
+    transposeRepeat,
+    setTransposeRepeat,
+    transposeRepeatAmount,
+    setTransposeRepeatAmount,
+    notesBeforeTranspose,
+    setNotesBeforeTranspose,
   } = useGlobalContext();
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // doesn't need to persist globally like many of the other variables
@@ -36,6 +42,15 @@ const HomePage = () => {
   
   // transpose option shift all midi notes by specified amount
   const transposeRef = useRef<number>(0);
+
+  // transpose repeat option to steadily transpose up/down by transposeRepeatAmount every notesBeforeTranspose notes received
+  const transposeRepeatRef = useRef<boolean>(false);
+  const transposeRepeatAmountRef = useRef<number>(0);
+  const notesBeforeTransposeRef = useRef<number>(0);
+  // running total of the transpose repeat amount applied so far, added on top of transposeRef
+  const repeatOffsetRef = useRef<number>(0);
+  // # of notes received since repeatOffsetRef was last increased
+  const repeatNoteCounterRef = useRef<number>(0);
 
   // useRef to be able to control image display to be full screen or not
   const sliderRef = useRef<HTMLDivElement | null>(null); // Ref for the slider
@@ -54,6 +69,9 @@ const HomePage = () => {
   // toggle play/stop
   const toggleSlideshow = () => {
     setIsPlaying((prev) => !prev); 
+    // reset transpose repeat back to the Transpose MIDI Notes baseline
+    repeatOffsetRef.current = 0;
+    repeatNoteCounterRef.current = 0;
   };
 
   // put images uploaded by user in images array
@@ -102,6 +120,18 @@ const HomePage = () => {
     modByUserInputRef.current = modByUserInput;
   }, [modByUserInput]);
 
+  useEffect(() => {
+    transposeRepeatRef.current = transposeRepeat;
+  }, [transposeRepeat]);
+
+  useEffect(() => {
+    transposeRepeatAmountRef.current = transposeRepeatAmount;
+  }, [transposeRepeatAmount]);
+
+  useEffect(() => {
+    notesBeforeTransposeRef.current = notesBeforeTranspose;
+  }, [notesBeforeTranspose]);
+
   // request access to receive MIDI from user
   // and save available midi inputs in array to display for user to select 
   useEffect(() => {
@@ -146,11 +176,17 @@ const HomePage = () => {
     if ((command & 0xf0) === 144 && velocity > 0) { // Note On
       // console.log(`Images length: ${imagesRef.current.length}`);
 
+      const repeatOn = transposeRepeatRef.current;
+      const totalTranspose = transposeRef.current + (repeatOn ? repeatOffsetRef.current : 0);
+
       // mod note by # of images or not based on user toggle button
       if (modByNumImagesRef.current) {
-        const newIndex = (note + transposeRef.current) % imagesRef.current.length;
+        const newIndex = (note + totalTranspose) % imagesRef.current.length;
         if (newIndex >= 0) {
           setCurrentImageIndex(newIndex);
+        }
+        else if (repeatOn) { // wrap around to the end of the images array
+          setCurrentImageIndex(newIndex + imagesRef.current.length);
         }
         else { // make sure new index is not less than 0, if < 0 set to 0
           setCurrentImageIndex(0);
@@ -165,9 +201,12 @@ const HomePage = () => {
         // console.log("transposeRef.current: " + transposeRef.current);
         // choosing to mod by THEN transpose
         // and THEN mod by the # of images so that never out of bounds
-        const newIndex = ((note % modByUserInputRef.current) + transposeRef.current) % imagesRef.current.length;
+        const newIndex = ((note % modByUserInputRef.current) + totalTranspose) % imagesRef.current.length;
         if (newIndex >= 0) {
           setCurrentImageIndex(newIndex);
+        }
+        else if (repeatOn) { // wrap around to the end of the images array
+          setCurrentImageIndex(newIndex + imagesRef.current.length);
         }
         else { // make sure new index is not less than 0, if < 0 set to 0
           setCurrentImageIndex(0);
@@ -176,9 +215,18 @@ const HomePage = () => {
         // console.log("newIndex: " + newIndex);
       }
       else { // NOT REALLY SURE WHY WE WOULD GET HERE...
-        const newIndex = (note + transposeRef.current);
+        const newIndex = (note + totalTranspose);
         setCurrentImageIndex(newIndex);
         // console.log("newIndex: " + newIndex);
+      }
+
+      // after every notesBeforeTranspose notes, move the running offset by transposeRepeatAmount
+      if (repeatOn && notesBeforeTransposeRef.current > 0) {
+        repeatNoteCounterRef.current += 1;
+        if (repeatNoteCounterRef.current >= notesBeforeTransposeRef.current) {
+          repeatNoteCounterRef.current = 0;
+          repeatOffsetRef.current += transposeRepeatAmountRef.current;
+        }
       }
 
       // console.log(note);
@@ -365,6 +413,46 @@ const HomePage = () => {
           className="p-2 border border-gray-300 rounded bg-[#00FFFF] w-16 text-md lg:text-2xl xl:text-xl"
         />
       </div>
+
+      {/* transpose repeat checkbox */}
+      <div className='flex w-[95%] md:w-[50%] gap-4 mb-4 items-start md:flex-row md:items-center md:justify-center'>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={transposeRepeat}
+            onChange={() => setTransposeRepeat((prev) => !prev)}
+            className="w-10 h-10 lg:w-10 lg:h-10 xl:w-7 xl:h-7 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+          />
+          <span className="text-white text-lg lg:text-3xl xl:text-2xl">Transpose Repeat</span>
+        </label>
+      </div>
+
+      {/* transpose repeat amount and # notes before transpose inputs on same line */}
+      {transposeRepeat && (
+        <div className='flex flex-wrap w-[95%] md:w-[50%] gap-4 mb-4 items-start md:flex-row md:items-center md:justify-center'>
+          <label htmlFor="transpose-repeat-amount-input" className="text-white text-lg lg:text-3xl xl:text-2xl">
+            Transpose Amount:
+          </label>
+          <input
+            id="transpose-repeat-amount-input"
+            type="number"
+            value={transposeRepeatAmount}
+            onChange={(e) => setTransposeRepeatAmount(Number(e.target.value))}
+            className="p-2 border border-gray-300 rounded bg-[#00FFFF] w-16 text-md lg:text-2xl xl:text-xl"
+          />
+          <label htmlFor="notes-before-transpose-input" className="text-white text-lg lg:text-3xl xl:text-2xl">
+            # Notes Before Transpose:
+          </label>
+          <input
+            id="notes-before-transpose-input"
+            type="number"
+            min={0}
+            value={notesBeforeTranspose}
+            onChange={(e) => setNotesBeforeTranspose(Number(e.target.value))}
+            className="p-2 border border-gray-300 rounded bg-[#00FFFF] w-16 text-md lg:text-2xl xl:text-xl"
+          />
+        </div>
+      )}
 
       {/* start/stop button and fullscreen button and reorder images button on same line */}
       <div className='flex gap-4 w-[95%] lg:w-[50%] justify-center mt-2'>

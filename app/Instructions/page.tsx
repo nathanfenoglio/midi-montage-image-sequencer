@@ -116,6 +116,20 @@ const Instructions = () => {
             <Image src='/images/midi_image_seq_9.png' alt='midi_image_seq_9' layout='fill' objectFit='contain' className='rounded-lg'/>
           </div>
 
+          {/* Transpose Repeat */}
+          <h1 className='text-[#FFD700] text-3xl sm:text-4xl md:text-5xl mt-12'>Transpose Repeat</h1>
+          <div className='w-[80%] lg:w-[50%] pl-2 xl:pl-6 mx-auto text-start text-lg md:text-xl text-opacity-60 font-bold text-white'>
+            <ul className='list-disc pl-5 space-y-4'>
+              <li className='mt-12'>check &quot;Transpose Repeat&quot; to steadily transpose incoming midi notes up or down as they are received</li>
+              <li>every &quot;# Notes Before Transpose&quot; notes received, &quot;Transpose Amount&quot; is added to the transposition (use a negative &quot;Transpose Amount&quot; to move down)</li>
+              <li>starts from the &quot;Transpose MIDI Notes&quot; value as the baseline</li>
+              <li>for example with &quot;Transpose MIDI Notes&quot; at 48, &quot;Transpose Amount&quot; at 2, &quot;# Notes Before Transpose&quot; at 7, and incoming notes 0, 2, 3, 5, 7, 8, 10 repeating, the images triggered will be 48, 50, 51, 53, 55, 56, 58 then 50, 52, 53, 55, 57, 58, 60 then 52, 54, 55, 57, 59, 60, 62 and so on</li>
+              <li>allows a repeating midi pattern to carve a larger path through the uploaded images</li>
+              <li>transposition resets back to the &quot;Transpose MIDI Notes&quot; baseline when Start/Stop is clicked</li>
+              <li>if the transposition moves below the first image, it wraps around to the last image</li>
+            </ul>
+          </div>
+
           {/* Reorder Images */}
           <h1 className='text-[#FFD700] text-3xl sm:text-4xl md:text-5xl mt-12'>Reorder Images</h1>
           <div className='w-[80%] lg:w-[50%] pl-2 xl:pl-6 mx-auto text-start text-lg md:text-xl text-opacity-60 font-bold text-white'>

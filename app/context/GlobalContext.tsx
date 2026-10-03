@@ -14,6 +14,12 @@ interface GlobalContextProps {
   setModByUserInput: React.Dispatch<React.SetStateAction<number>>;
   transpose: number;
   setTranspose: React.Dispatch<React.SetStateAction<number>>;
+  transposeRepeat: boolean;
+  setTransposeRepeat: React.Dispatch<React.SetStateAction<boolean>>;
+  transposeRepeatAmount: number;
+  setTransposeRepeatAmount: React.Dispatch<React.SetStateAction<number>>;
+  notesBeforeTranspose: number;
+  setNotesBeforeTranspose: React.Dispatch<React.SetStateAction<number>>;
 }
 
 // use react's createContext function to create the global context for the interface props defined
@@ -26,6 +32,9 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [modByNumImages, setModByNumImages] = useState(true);
   const [modByUserInput, setModByUserInput] = useState(128); // just setting default to 128 (# of cells in an ableton drum rack)
   const [transpose, setTranspose] = useState(0);
+  const [transposeRepeat, setTransposeRepeat] = useState(false);
+  const [transposeRepeatAmount, setTransposeRepeatAmount] = useState(0);
+  const [notesBeforeTranspose, setNotesBeforeTranspose] = useState(0);
 
   return (
     <GlobalContext.Provider
@@ -40,6 +49,12 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setModByUserInput,
         transpose,
         setTranspose,
+        transposeRepeat,
+        setTransposeRepeat,
+        transposeRepeatAmount,
+        setTransposeRepeatAmount,
+        notesBeforeTranspose,
+        setNotesBeforeTranspose,
       }}
     >
       {children}
