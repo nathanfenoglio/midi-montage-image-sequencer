@@ -30,7 +30,7 @@ const ImagePlayer = ({ images, currentImageIndex }: ImagePlayerProps) => {
 
   if (images.length === 0) return <p className="text-gray-600">No images uploaded yet.</p>;
 
-  console.log("currentImageIndex: " + currentImageIndex);
+  // console.log("currentImageIndex: " + currentImageIndex);
 
   return (
     <div className="w-full h-screen flex items-center justify-center bg-gray-900">

@@ -117,15 +117,15 @@ const HomePage = () => {
         };
 
         // just printing all of the available attributes of a MIDIInput object
-        midiAccess.inputs.forEach((input) => {
-          console.log(`ID: ${input.id}`);
-          console.log(`Name: ${input.name}`);
-          console.log(`Manufacturer: ${input.manufacturer}`);
-          console.log(`Type: ${input.type}`);
-          console.log(`Version: ${input.version}`);
-          console.log(`State: ${input.state}`);
-          console.log(`Connection: ${input.connection}`);
-        });
+        // midiAccess.inputs.forEach((input) => {
+        //   console.log(`ID: ${input.id}`);
+        //   console.log(`Name: ${input.name}`);
+        //   console.log(`Manufacturer: ${input.manufacturer}`);
+        //   console.log(`Type: ${input.type}`);
+        //   console.log(`Version: ${input.version}`);
+        //   console.log(`State: ${input.state}`);
+        //   console.log(`Connection: ${input.connection}`);
+        // });
       });
     } 
     else {
@@ -139,12 +139,12 @@ const HomePage = () => {
     // destructure midi note message
     const [command, note, velocity] = message.data;
   
-    console.log(`Received MIDI message: Command=${command}, Note=${note}, Velocity=${velocity}`);
+    // console.log(`Received MIDI message: Command=${command}, Note=${note}, Velocity=${velocity}`);
   
     // 0xf0 11110000 to mask and get the upper 4 bits of the command part of the midi message to check if note on
     // 10010000 is 144 and represents note on
     if ((command & 0xf0) === 144 && velocity > 0) { // Note On
-      console.log(`Images length: ${imagesRef.current.length}`);
+      // console.log(`Images length: ${imagesRef.current.length}`);
 
       // mod note by # of images or not based on user toggle button
       if (modByNumImagesRef.current) {
@@ -154,15 +154,15 @@ const HomePage = () => {
         }
         else { // make sure new index is not less than 0, if < 0 set to 0
           setCurrentImageIndex(0);
-          console.log("specified index < 0, setting index to 0");
+          // console.log("specified index < 0, setting index to 0");
         }
-        console.log("newIndex: " + newIndex);
+        // console.log("newIndex: " + newIndex);
       }
       // option for user specified mod by #
       else if (modByUserInputRef.current != null) {
-        console.log("note: " + note);
-        console.log("modByNumImagesRef.current: " + modByNumImagesRef.current);
-        console.log("transposeRef.current: " + transposeRef.current);
+        // console.log("note: " + note);
+        // console.log("modByNumImagesRef.current: " + modByNumImagesRef.current);
+        // console.log("transposeRef.current: " + transposeRef.current);
         // choosing to mod by THEN transpose
         // and THEN mod by the # of images so that never out of bounds
         const newIndex = ((note % modByUserInputRef.current) + transposeRef.current) % imagesRef.current.length;
@@ -171,18 +171,18 @@ const HomePage = () => {
         }
         else { // make sure new index is not less than 0, if < 0 set to 0
           setCurrentImageIndex(0);
-          console.log("specified index < 0, setting index to 0");
+          // console.log("specified index < 0, setting index to 0");
         }
-        console.log("newIndex: " + newIndex);
+        // console.log("newIndex: " + newIndex);
       }
       else { // NOT REALLY SURE WHY WE WOULD GET HERE...
         const newIndex = (note + transposeRef.current);
         setCurrentImageIndex(newIndex);
-        console.log("newIndex: " + newIndex);
+        // console.log("newIndex: " + newIndex);
       }
 
-      console.log(note);
-      console.log("transposeRef.current: " + transposeRef.current);
+      // console.log(note);
+      // console.log("transposeRef.current: " + transposeRef.current);
     }
   }, []);
 
@@ -197,7 +197,7 @@ const HomePage = () => {
       const previousInput = midiInputs.find((input) => input.id === selectedInputId);
       if (previousInput) {
         previousInput.onmidimessage = null; // remove previous listener by selecting null instead of your event handler handleMIDIMessage 
-        console.log(`Disconnected from: ${previousInput.name}`);
+        // console.log(`Disconnected from: ${previousInput.name}`);
       }
     }
 
@@ -210,20 +210,20 @@ const HomePage = () => {
     if (selectedInput) {
       // WEB MIDI API onmidimessage allows you to assign an event handler function to be used for incoming midi messages 
       selectedInput.onmidimessage = handleMIDIMessage;
-      console.log(`Connected to: ${selectedInput.name}`);
+      // console.log(`Connected to: ${selectedInput.name}`);
     }    
 
     // just printing all of the available attributes of a MIDIInput object
     // it's always one behind the actual state but just printing so leaving alone 
-    midiInputs.forEach((input) => {
-      console.log(`ID: ${input.id}`);
-      console.log(`Name: ${input.name}`);
-      console.log(`Manufacturer: ${input.manufacturer}`);
-      console.log(`Type: ${input.type}`);
-      console.log(`Version: ${input.version}`);
-      console.log(`State: ${input.state}`);
-      console.log(`Connection: ${input.connection}`);
-    });
+    // midiInputs.forEach((input) => {
+    //   console.log(`ID: ${input.id}`);
+    //   console.log(`Name: ${input.name}`);
+    //   console.log(`Manufacturer: ${input.manufacturer}`);
+    //   console.log(`Type: ${input.type}`);
+    //   console.log(`Version: ${input.version}`);
+    //   console.log(`State: ${input.state}`);
+    //   console.log(`Connection: ${input.connection}`);
+    // });
   }, [selectedInputId, midiInputs, setSelectedInputId, handleMIDIMessage]);
 
   // needed to reassign midi handler for WEB MIDI API onmidimessage when user returns from another page
